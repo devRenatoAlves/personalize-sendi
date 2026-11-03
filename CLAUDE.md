@@ -11,7 +11,7 @@ resposta, motivo de finalização) e atalho para o sistema do cliente. Há um **
 Worker** que faz proxy de IA com **fallback entre 3 provedores** (Groq → Gemini →
 OpenRouter), mantendo as chaves fora da extensão.
 
-**Status**: em adaptação do ChatPro para o Sendi (domínio e seletores DOM ainda pendentes; ver README).
+**Status**: adaptada ao Sendi (`*.sendi.chat`). O cronômetro foi removido porque o Sendi tem um nativo; o tema agora sobrescreve variáveis CSS (shadcn) em vez de classes. Detalhes de cada módulo abaixo ainda descrevem a origem ChatPro em parte; `extension/src/selectors.js` e o README são a fonte atual.
 
 Sem build, sem bundler, sem npm na extensão: JS puro carregado direto pelo `manifest.json`.
 

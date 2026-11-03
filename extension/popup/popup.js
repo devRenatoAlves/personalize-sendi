@@ -1,6 +1,5 @@
 // Lê e grava preferências em chrome.storage.local.
 const DEFAULTS = {
-  timerEnabled: true,
   themeEnabled: false,
   bgImage: '',
   accent: '#2563eb',
@@ -12,9 +11,6 @@ const DEFAULTS = {
   paletteBubbleIn: '',
   logoImage: '',
   logoRound: false,
-  slaColors: true,
-  slaYellow: 5,
-  slaRed: 15,
   clientLink: true,
   clientLinkFilter: '', // sem UI no popup; ajustável só pelo storage (sem padrão: vazio desliga o botão)
   dockColor: '',
@@ -27,11 +23,6 @@ const DEFAULTS = {
 };
 
 const els = {
-  timerEnabled: document.getElementById('timerEnabled'),
-  slaColors: document.getElementById('slaColors'),
-  slaOpts: document.getElementById('slaOpts'),
-  slaYellow: document.getElementById('slaYellow'),
-  slaRed: document.getElementById('slaRed'),
   themeEnabled: document.getElementById('themeEnabled'),
   bgImage: document.getElementById('bgImage'),
   accent: document.getElementById('accent'),
@@ -74,7 +65,6 @@ let reasonAction = 'copy';
 
 function refreshUI() {
   els.themeOpts.classList.toggle('disabled', !els.themeEnabled.checked);
-  els.slaOpts.classList.toggle('disabled', !els.slaColors.checked);
   els.reasonOpts.classList.toggle('disabled', !els.aiReason.checked);
   els.reasonCopy.classList.toggle('active', reasonAction === 'copy');
   els.reasonFinish.classList.toggle('active', reasonAction === 'finalize');
@@ -92,10 +82,6 @@ function refreshUI() {
 async function load() {
   const { cpc_prefs } = await chrome.storage.local.get('cpc_prefs');
   const prefs = Object.assign({}, DEFAULTS, cpc_prefs || {});
-  els.timerEnabled.checked = !!prefs.timerEnabled;
-  els.slaColors.checked = prefs.slaColors !== false;
-  els.slaYellow.value = prefs.slaYellow ?? 5;
-  els.slaRed.value = prefs.slaRed ?? 15;
   els.themeEnabled.checked = !!prefs.themeEnabled;
   els.bgImage.value = prefs.bgImage || '';
   els.accent.value = prefs.accent || '#2563eb';
@@ -122,10 +108,6 @@ async function load() {
 
 async function save() {
   const cpc_prefs = {
-    timerEnabled: els.timerEnabled.checked,
-    slaColors: els.slaColors.checked,
-    slaYellow: Number(els.slaYellow.value) > 0 ? Number(els.slaYellow.value) : 5,
-    slaRed: Number(els.slaRed.value) > 0 ? Number(els.slaRed.value) : 15,
     themeEnabled: els.themeEnabled.checked,
     bgImage: els.bgImage.value.trim(),
     accent: els.accent.value,
@@ -150,7 +132,7 @@ async function save() {
   refreshUI();
 }
 
-['timerEnabled', 'slaColors', 'slaYellow', 'slaRed', 'themeEnabled', 'bgImage', 'logoImage', 'logoRound', 'accent', 'overlay', 'autoColors',
+['themeEnabled', 'bgImage', 'logoImage', 'logoRound', 'accent', 'overlay', 'autoColors',
  'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink'].forEach((k) => {
   els[k].addEventListener('change', save);
   els[k].addEventListener('input', save);

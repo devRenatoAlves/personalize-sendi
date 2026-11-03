@@ -16,7 +16,7 @@ window.CPC_AI = (function () {
     ensureDockButtons();
   }
 
-  const composer = () => document.querySelector('textarea[placeholder="Mensagem"]');
+  const composer = () => document.querySelector(S.composer);
 
   // Escreve no textarea React-controlado.
   function setComposer(text) {
@@ -28,16 +28,23 @@ window.CPC_AI = (function () {
     el.focus();
   }
 
-  // Lê as últimas mensagens da conversa aberta.
+  // Lê as últimas mensagens da conversa aberta. Enviadas (justify-end) = equipe/flow;
+  // recebidas (justify-start) = cliente. O horário e o "entregue" vivem dentro do <p>
+  // em spans, então a leitura é feita num clone sem eles.
   function gather(max = 25) {
-    return [...document.querySelectorAll('.msg')]
-      .filter((m) => m.querySelector('.msg-text'))
-      .slice(-max)
-      .map((m) => ({
-        from: m.classList.contains('msg--from-me') ? 'me' : 'client',
-        text: (m.querySelector('.msg-text').textContent || '').trim(),
-      }))
-      .filter((m) => m.text);
+    return [...document.querySelectorAll(S.message)]
+      .map((m) => {
+        const p = m.querySelector(S.messageText);
+        if (!p) return null;
+        const clone = p.cloneNode(true);
+        clone.querySelectorAll('span.tabular-nums, .sr-only').forEach((n) => n.remove());
+        return {
+          from: m.classList.contains('justify-end') ? 'me' : 'client',
+          text: (clone.textContent || '').trim(),
+        };
+      })
+      .filter((m) => m && m.text)
+      .slice(-max);
   }
 
   async function call(mode, payload) {
@@ -161,14 +168,9 @@ window.CPC_AI = (function () {
     el.dispatchEvent(new Event('input', { bubbles: true }));
   }
 
-  // Botão "finalizar" do header. No Sendi é um div.button (role generic, não <button>),
-  // com um <span>finalizar</span> dentro. Acha pelo texto do span e sobe pro .button.
+  // Botão "Finalizar" do cabeçalho da conversa (abre um popover com busca de motivos).
   function findFinalizeBtn() {
-    const spans = document.querySelectorAll('.chat-messages-header span, .chat-messages-header-buttons span');
-    for (const s of spans) {
-      if (/^finalizar$/i.test((s.textContent || '').trim())) return s.closest('.button') || s.parentElement;
-    }
-    return null;
+    return document.querySelector(S.finalizeBtn);
   }
 
   // Visível = tem caixa renderizada. Não usa offsetParent (dá null em position:fixed).
@@ -187,17 +189,12 @@ window.CPC_AI = (function () {
     });
   }
 
-  // Acha o item da lista cujo texto bate com o motivo (dentro do escopo dado). Varre
-  // vários tipos de tag e prefere o elemento "folha" (menos descendentes) p/ clicar certo.
+  // Acha o item da lista cujo texto bate com o motivo (exato primeiro, depois contém).
   function findReasonItem(reason, scope) {
     const want = reason.trim().toUpperCase();
-    const root = scope || document;
-    const items = [...root.querySelectorAll(
-      '.subnav-list button, .subnav-list a, .subnav-list li, .subnav-list [role="button"], .subnav-list div, .subnav-list span'
-    )];
-    const exact = items.filter((el) => (el.textContent || '').trim().toUpperCase() === want);
-    if (exact.length) return exact.sort((a, b) => a.querySelectorAll('*').length - b.querySelectorAll('*').length)[0];
-    return items.find((el) => (el.textContent || '').trim().toUpperCase().includes(want)) || null;
+    const items = [...(scope || document).querySelectorAll(S.reasonItem)];
+    return items.find((el) => (el.textContent || '').trim().toUpperCase() === want) ||
+           items.find((el) => (el.textContent || '').trim().toUpperCase().includes(want)) || null;
   }
 
   async function finalizeWith(reason) {
@@ -207,31 +204,21 @@ window.CPC_AI = (function () {
     setBusyReason(true);
     try {
       const btn = findFinalizeBtn();
-      if (!btn) { toast('Botão "finalizar" não encontrado.'); return; }
+      if (!btn) { toast('Botão "Finalizar" não encontrado.'); return; }
 
-      // A subnav é FILHA do botão finalizar — escopa tudo aqui (evita pegar outra .subnav).
-      const subOf = () => btn.querySelector(S.subnav);
-      // Abre só se ainda não estiver aberta (reclicar fecharia/toggle).
-      if (!isVisible(subOf())) {
-        fullClick(btn);
-        let sub0 = await waitFor(() => { const s = subOf(); return isVisible(s) ? s : null; }, 600);
-        // Fallback: se não abriu, o handler pode estar no filho interno (svg+span).
-        if (!sub0) {
-          const inner = btn.querySelector(':scope > div');
-          if (inner) fullClick(inner);
-        }
-      }
+      // Popover aberto = o que tem o campo de busca de motivos.
+      const popoverOf = () => [...document.querySelectorAll(S.popover)]
+        .find((p) => p.querySelector(S.reasonSearchInput) && isVisible(p)) || null;
+      if (!popoverOf()) fullClick(btn);
+      const pop = await waitFor(popoverOf, 3000);
+      if (!pop) { toast('A lista de motivos não abriu.'); return; }
 
-      const sub = await waitFor(() => { const s = subOf(); return isVisible(s) ? s : null; }, 3000);
-      if (!sub) { toast('A lista de motivos não abriu.'); return; }
-
-      // Tenta achar direto; se a lista for virtualizada (só rende o visível), filtra
-      // digitando o motivo na busca e tenta de novo.
-      let item = findReasonItem(reason, sub);
+      // A lista pode ser filtrada/virtualizada: digita o motivo na busca e procura de novo.
+      let item = findReasonItem(reason, pop);
       if (!item) {
-        const search = sub.querySelector('input, textarea');
+        const search = pop.querySelector(S.reasonSearchInput);
         if (search) { search.focus(); setNativeValue(search, reason); }
-        item = await waitFor(() => findReasonItem(reason, sub), 2500);
+        item = await waitFor(() => findReasonItem(reason, pop), 2500);
       }
       if (!item) { toast('Motivo não encontrado na lista do Sendi.'); return; }
       fullClick(item);

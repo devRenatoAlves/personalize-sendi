@@ -8,11 +8,16 @@ Planejamento original: [docs/SDD_Sendi_Companion.md](docs/SDD_Sendi_Companion.md
 
 ## Status
 
-**Em adaptação.** Base derivada da extensão Personalize Pro (que era para o ChatPro). O que já
-está genérico: cronômetro/SLA, tema (papel de parede + paleta), assistente de IA, Worker.
-O que falta para funcionar no Sendi: **domínio** (`manifest.json` → `content_scripts.matches`)
-e **seletores DOM** (`extension/src/selectors.js` + textos como "Atender" em `timer.js`).
-Os valores atuais são herdados do ChatPro e **não vão casar** no Sendi até serem ajustados.
+**Adaptada ao Sendi** (`*.sendi.chat`). Seletores mapeados em `extension/src/selectors.js`
+com base em atributos estáveis (`data-slot`, `data-message-id`, `aria-label`).
+
+- **Tema**: o Sendi usa variáveis CSS (shadcn). A paleta sobrescreve `--background`, `--primary`,
+  `--sidebar-background` etc., e o texto troca entre claro/escuro conforme a cor escolhida.
+  Papel de parede na área de mensagens, logo trocável, cores dos balões.
+- **IA**: Melhorar / Sugerir / Motivo de finalização (copiar ou finalizar pelo popover nativo).
+- **Cronômetro**: removido. O Sendi já mostra "Em atendimento há…" com cor em cada card.
+- **Sistema do cliente**: precisa de `clientLinkFilter`; o painel de dados do contato ainda não foi mapeado.
+- **Não testado ainda**: o clique que finaliza de verdade (é irreversível; teste num atendimento seu).
 
 ## Estrutura
 
@@ -26,7 +31,6 @@ extension/
   src/
     selectors.js   # seletores DOM centralizados (atualizar aqui se o Sendi mudar)
     storage.js     # chrome.storage: timers + preferências
-    timer.js       # cronômetro por card (ID = UUID do href /chat/<uuid>) + SLA
     theme.js       # papel de parede + paleta de cores aplicada por stylesheet
     ai.js          # assistente IA: Melhorar, Sugerir, Motivo (fala com o Worker)
     clientlink.js  # botão "Sistema do cliente" (lê a URL do painel do lead)

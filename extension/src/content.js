@@ -1,11 +1,10 @@
-// Ponto de entrada: observa o DOM do Sendi e mantém timers + tema.
+// Ponto de entrada: observa o DOM do Sendi e mantém tema + IA.
 (function () {
   // Re-sincroniza com debounce para não rodar a cada mutação.
   let debounceId = null;
   function scheduleSync() {
     clearTimeout(debounceId);
     debounceId = setTimeout(() => {
-      window.CPC_Timer.sync();
       window.CPC_AI.refresh();
       window.CPC_ClientLink.refresh();
     }, 200);
@@ -21,8 +20,6 @@
     await window.CPC_Theme.apply();
     await window.CPC_AI.init();
     await window.CPC_ClientLink.init();
-    await window.CPC_Timer.sync();
-    window.CPC_Timer.start();
     window.CPC_AI.refresh();
     window.CPC_ClientLink.refresh();
     startObserver();

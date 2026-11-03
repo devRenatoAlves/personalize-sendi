@@ -1,39 +1,30 @@
 // Camada central de seletores DOM.
-// Único lugar a atualizar se o Sendi mudar o layout.
+// Único lugar a atualizar se o Sendi mudar o layout. O Sendi é Vue + Tailwind/shadcn:
+// as classes utilitárias mudam, então os seletores usam atributos estáveis
+// (data-slot, data-message-id, aria-label, data-conversa-aberta).
 window.CPC_SELECTORS = {
-  // Lista que contém os cards de atendimento.
-  cardList: 'section.session-cards',
+  // Painel da conversa aberta (contém header, mensagens e composer).
+  chatSection: 'section:has(> header[data-conversa-aberta])',
 
-  // Cada card de atendimento (âncora com link para o chat).
-  card: 'a.card[href^="/chat/"]',
+  // Área das mensagens (recebe o papel de parede).
+  chatBg: 'section:has(> header[data-conversa-aberta]) > div.relative.min-h-0',
 
-  // Card atualmente aberto/ativo.
-  cardActive: 'a.card--active',
+  // Cabeçalho da conversa aberta e botão "Finalizar" dentro dele.
+  chatHeader: 'header[data-conversa-aberta]',
+  finalizeBtn: 'header[data-conversa-aberta] button[aria-label^="Finalizar"]',
 
-  // Região interna onde injetamos o cronômetro.
-  cardSlot: 'aside',
+  // Campo de resposta.
+  composer: 'footer[data-slot="composer"] textarea',
 
-  // Painel com o fundo de rabiscos da conversa (recebe o papel de parede).
-  chatBg: 'article.chat-messages-article',
+  // Mensagens: cada uma tem data-message-id; recebidas = justify-start, enviadas = justify-end.
+  message: '[data-message-id]',
+  messageText: 'p.whitespace-pre-wrap',
 
-  // Logo da empresa no header (âncora; contém o <img>). Recebe a logo personalizada.
-  headerLogo: 'a.header-logo',
+  // Logo do app (canto superior esquerdo da barra lateral).
+  headerLogo: 'a[href="/dashboard"] > div.aspect-square',
 
-  // Painel de identificação do cliente (lead). Contém o link do sistema do cliente.
-  chatAsideLead: 'section.chat-aside--lead',
-
-  // --- Fluxo de finalização (dropdown nativo de motivos) ---
-  // Dropdown que abre ao clicar em "finalizar" (busca + lista de motivos).
-  subnav: '.subnav',
-  subnavList: '.subnav-list',
-  subnavSearchInput: '.subnav-search input, .subnav-search textarea, .subnav-search .input-field-inner input',
-  // Cada item de motivo dentro da lista.
-  subnavListItem: '.subnav-list button, .subnav-list a, .subnav-list li, .subnav-list [role="button"]',
-};
-
-// Extrai o ID estável do atendimento a partir do href (/chat/<uuid>).
-window.CPC_getCardId = function (cardEl) {
-  const href = cardEl.getAttribute('href') || '';
-  const m = href.match(/\/chat\/([0-9a-fA-F-]+)/);
-  return m ? m[1] : null;
+  // --- Fluxo de finalização (popover nativo de motivos) ---
+  popover: '[data-slot="popover-content"]',
+  reasonSearchInput: '[data-slot="command-input"]',
+  reasonItem: '[data-slot="command-item"]',
 };

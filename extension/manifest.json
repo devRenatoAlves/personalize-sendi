@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Personalize Sendi",
   "version": "0.1.0",
-  "description": "Cronômetro com SLA, temas personalizados e assistente de IA (melhorar, sugerir, motivo) para o Sendi.",
+  "description": "Temas personalizados e assistente de IA (melhorar, sugerir, motivo) para o Sendi.",
   "permissions": ["storage"],
   "host_permissions": ["<all_urls>"],
   "browser_specific_settings": {
@@ -27,7 +27,7 @@
   "content_scripts": [
     {
       "matches": ["https://*.sendi.chat/*"],
-      "js": ["src/selectors.js", "src/storage.js", "src/timer.js", "src/theme.js", "src/ai.js", "src/clientlink.js", "src/content.js"],
+      "js": ["src/selectors.js", "src/storage.js", "src/theme.js", "src/ai.js", "src/clientlink.js", "src/content.js"],
       "css": ["src/styles.css"],
       "run_at": "document_idle"
     }

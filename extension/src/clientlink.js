@@ -18,8 +18,7 @@ window.CPC_ClientLink = (function () {
 
   // Junta todo texto onde o link pode estar: hrefs, valores de campos e o texto do painel.
   function leadText() {
-    const lead = document.querySelector(S.chatAsideLead + '.active') ||
-                 document.querySelector(S.chatAsideLead);
+    const lead = S.chatAsideLead ? document.querySelector(S.chatAsideLead) : document.querySelector(S.chatSection);
     if (!lead) return null;
     const parts = [];
     lead.querySelectorAll('a[href]').forEach((a) => parts.push(a.getAttribute('href') || ''));

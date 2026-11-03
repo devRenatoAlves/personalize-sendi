@@ -1,8 +1,8 @@
-// Aplica tema/personalização visual.
-// O Sendi é SPA com painéis opacos: o fundo do body só aparece na faixa lateral.
-// O padrão de rabiscos do chat costuma vir de um pseudo-elemento (::before).
-// Detectamos o maior elemento (ou seu pseudo) que tem background-image e
-// substituímos por um stylesheet injetado — sem depender de classes do build.
+// Aplica tema/personalização visual no Sendi.
+// O Sendi usa tokens de cor (variáveis CSS do shadcn: --background, --primary, --sidebar...),
+// então a paleta é aplicada sobrescrevendo essas variáveis em :root e .dark — vale para o
+// app inteiro e sobrevive aos re-renders, sem depender de classes do build.
+// O papel de parede vai na área de mensagens (seletor estável em CPC_SELECTORS.chatBg).
 window.CPC_Theme = (function () {
   const STYLE_ID = 'cpc-theme-style';
   const COLOR_ID = 'cpc-color-style';
@@ -80,90 +80,47 @@ window.CPC_Theme = (function () {
     });
   }
 
+  const luma = (c) => (0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b) / 255;
+  const hexOf = (c) => '#' + [c.r, c.g, c.b].map((v) => Math.max(0, Math.min(255, v)).toString(16).padStart(2, '0')).join('');
+
+  // Papéis de cor → tokens do Sendi:
+  //   header    → --primary/--ring (botões, itens ativos, marca)
+  //   side      → --background/--sidebar/--card/--popover (as "molduras" e painéis)
+  //   input     → tom de `side` deslocado: --muted/--input/--accent/--secondary (campos, hover)
+  //   bubbleOut → balões enviados; bubbleIn → balões recebidos
+  // O texto (--foreground etc.) é escolhido pela luminância de `side`, então qualquer paleta
+  // fica legível, clara ou escura.
   function applyColors() {
     if (!colorCss) return;
-    // Papéis de cor (divisão clara e harmônica):
-    //   header   → barra do topo + botões de ação (cor da marca)
-    //   side     → painéis: navs, listas, rodapé, aside, relatórios (a "moldura")
-    //   input    → campos digitáveis e cards de superfície — tom de `side` deslocado,
-    //              destaca-se do painel sem copiar a cor do balão recebido
-    //   bubbleIn → SÓ balões recebidos (e avisos do chat)
-    //   bubbleOut→ balões enviados (e botão secundário)
-    const input = surfaceTone(colorCss.side);
+    const side = parseRgb(colorCss.side), head = parseRgb(colorCss.header);
+    const bo = parseRgb(colorCss.bubbleOut), bi = parseRgb(colorCss.bubbleIn);
+    if (!side || !head) return;
+    const dark = luma(side) < 0.5;
+    const fg = dark ? '#f1f5f9' : '#0f172a';
+    const fgMuted = dark ? '#94a3b8' : '#475569';
+    const input = hexOf(parseRgb(surfaceTone(colorCss.side)));
+    const border = hexOf(shade(side, dark ? 0.18 : -0.14));
+    const sideDeep = hexOf(shade(side, dark ? -0.35 : -0.04));
+    const onPrimary = luma(head) < 0.6 ? '#ffffff' : '#0f172a';
+    const onBubble = (c) => (c && luma(c) < 0.6 ? '#ffffff' : '#0f172a');
+    const primarySoft = hexOf(shade(head, dark ? -0.6 : 0.85));
+    const vars = {
+      '--background': hexOf(side), '--card': hexOf(side), '--popover': hexOf(side),
+      '--sidebar': sideDeep, '--sidebar-background': sideDeep,
+      '--foreground': fg, '--card-foreground': fg, '--popover-foreground': fg,
+      '--sidebar-foreground': fg, '--muted-foreground': fgMuted,
+      '--muted': input, '--secondary': input, '--accent': input, '--sidebar-accent': input,
+      '--input': border, '--border': border, '--sidebar-border': border,
+      '--primary': hexOf(head), '--primary-foreground': onPrimary, '--ring': hexOf(head),
+      '--sidebar-primary': hexOf(head), '--sidebar-primary-foreground': onPrimary,
+      '--primary-soft': primarySoft, '--primary-soft-foreground': dark ? '#ffffff' : hexOf(head),
+    };
+    const decl = Object.entries(vars).map(([k, v]) => `${k}: ${v} !important;`).join(' ');
+    const S = window.CPC_SELECTORS;
     styleTag(COLOR_ID).textContent = `
-      section.header { background-color: ${colorCss.header} !important; background-image: none !important; }
-      header,
-      .chat-sessions,
-      .session-search,
-      .session-groups,
-      .left-nav,
-      .left-nav-top,
-      .left-nav-bottom,
-      footer.chat-messages-footer,
-      .chat-messages-footer-assigned,
-      main.reports,
-      aside.reports-aside,
-      section.reports-content,
-      .rep-topics,
-      .rep-content-flex,
-      .session-filters,
-      .subnav,
-      .subnav-search,
-      .subnav-list,
-      .chat-messages-shortcuts { background-color: ${colorCss.side} !important; }
-
-      /* Itens do dropdown de mensagens rápidas: transparentes (mostram o painel),
-         realçam no hover com o tom de superfície */
-      .chat-messages-shortcuts a { background-color: transparent !important; }
-      .chat-messages-shortcuts a:hover { background-color: ${input} !important; }
-
-      .chat-aside,
-      .chat-aside-header,
-      .chat-aside-article,
-      .lead-header,
-      .lead-form { background-color: ${colorCss.side} !important; background-image: none !important; }
-
-      /* Campos digitáveis: busca, filtros e o compositor de mensagem */
-      .session-search .input,
-      .session-search .input-field,
-      .session-search .input-field-inner,
-      .session-search input,
-      .session-filters .input,
-      .session-filters .input-field,
-      .session-filters .input-field-inner,
-      .session-filters .input-field input,
-      .session-filters .input-field select,
-      .subnav-search .input,
-      .subnav-search .input-field,
-      .subnav-search .input-field-inner,
-      .subnav-search .input-field-inner input,
-      .chat-messages-footer__text,
-      .chat-messages-footer__text .input-masked,
-      .chat-messages-footer__text .input-masked textarea { background-color: ${input} !important; }
-
-      /* Cards de métrica dos relatórios: superfície (não balão) */
-      .rep-topics-item,
-      .rep-topics-item--red,
-      .rep-topics-item--blue,
-      .rep-topics-item--green,
-      .rep-topics-item .rep-topics-header { background-color: ${input} !important; background-image: none !important; }
-
-      .msg:not(.msg--from-me) .msg-container { background-color: ${colorCss.bubbleIn} !important; }
-      .msg--from-me .msg-container { background-color: ${colorCss.bubbleOut} !important; }
-
-      /* Player de áudio: a barra de controles nativa tem fundo escuro próprio —
-         pinta com a cor do balão (enviado/recebido) */
-      .msg--from-me .msg-audio audio,
-      .msg--from-me .msg-audio audio::-webkit-media-controls-panel,
-      .msg--from-me .msg-audio audio::-webkit-media-controls-enclosure { background-color: ${colorCss.bubbleOut} !important; }
-      .msg:not(.msg--from-me) .msg-audio audio,
-      .msg:not(.msg--from-me) .msg-audio audio::-webkit-media-controls-panel,
-      .msg:not(.msg--from-me) .msg-audio audio::-webkit-media-controls-enclosure { background-color: ${colorCss.bubbleIn} !important; }
-      .msg-notice,
-      .msg-resume { background-color: ${colorCss.bubbleIn} !important; }
-
-      .chat-messages-footer-assigned .button { background-color: ${colorCss.header} !important; border-color: ${colorCss.header} !important; }
-      .chat-messages-footer-assigned .button.button-alt { background-color: ${colorCss.bubbleOut} !important; border-color: ${colorCss.bubbleOut} !important; }`;
+      :root, html.dark, html.theme-light, html.app-shell { ${decl} }
+      ${S.message}.justify-start > div[class*="rounded-xl"] { background-color: ${colorCss.bubbleIn} !important; color: ${onBubble(bi)} !important; }
+      ${S.message}.justify-end > div[class*="rounded-xl"] { background-color: ${colorCss.bubbleOut} !important; color: ${onBubble(bo)} !important; }`;
   }
 
   function clearColors() {
@@ -188,13 +145,11 @@ window.CPC_Theme = (function () {
   function applyLogo() {
     if (!current.logoImage) return;
     const sel = window.CPC_SELECTORS.headerLogo;
-    // Redonda: caixa quadrada recortada em círculo (cover). Normal: retangular (contain).
     const shape = current.logoRound
-      ? `width: 32px !important; height: 32px !important; border-radius: 50% !important;
-         background-size: cover !important;`
-      : `background-size: contain !important;`;
+      ? 'border-radius: 50% !important; background-size: cover !important;'
+      : 'background-size: contain !important; background-color: transparent !important;';
     styleTag(LOGO_ID).textContent = `
-      ${sel} img { opacity: 0 !important; }
+      ${sel} > * { opacity: 0 !important; }
       ${sel} {
         background-image: url("${cssUrl(current.logoImage)}") !important;
         background-position: center !important;
@@ -208,96 +163,28 @@ window.CPC_Theme = (function () {
     if (s) s.textContent = '';
   }
 
-  // Qual camada do elemento tem o background-image: '' (próprio), '::before' ou '::after'.
-  function bgLayer(el) {
-    for (const layer of ['', '::before', '::after']) {
-      const bg = getComputedStyle(el, layer || null).backgroundImage;
-      if (bg && bg !== 'none' && bg.indexOf('url(') !== -1) return layer;
-    }
-    return null;
-  }
-
-  // Acha o maior painel (qualquer tag) cujo próprio ou pseudo tem background-image.
-  function findChatBg() {
-    const marked = document.querySelector('[data-cpc-bg="1"]');
-    if (marked) {
-      const r = marked.getBoundingClientRect();
-      const layer = bgLayer(marked);
-      // Reusa só se ainda estiver visível (a tela inicial vira hidden ao abrir conversa).
-      if (r.width > 0 && r.height > 0 && layer !== null) return { el: marked, layer };
-      delete marked.dataset.cpcBg;
-      delete marked.dataset.cpcLayer;
-    }
-
-    // 1) Alvo conhecido: painel de rabiscos da conversa (classe estável).
-    for (const el of document.querySelectorAll(window.CPC_SELECTORS.chatBg)) {
-      const r = el.getBoundingClientRect();
-      if (r.width < 50 || r.height < 50) continue; // ignora versões ocultas (print/preview)
-      const layer = bgLayer(el);
-      if (layer !== null) return { el, layer };
-    }
-
-    // 2) Fallback heurístico (ex.: tela inicial, que é outro elemento).
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    let best = null;
-    let maxArea = 0;
-    document.querySelectorAll('div, section, main, ul, article').forEach((el) => {
-      const r = el.getBoundingClientRect();
-      if (r.width < vw * 0.3 || r.height < vh * 0.3) return; // só painéis grandes
-      if (r.left > vw * 0.5) return; // ignora popups/listas à direita
-      const layer = bgLayer(el);
-      if (layer === null) return;
-      const area = r.width * r.height;
-      if (area > maxArea) { maxArea = area; best = { el, layer }; }
-    });
-    return best;
-  }
-
+  // Papel de parede na área de mensagens. O seletor é estável, então vai direto em CSS
+  // (sem marcar elementos nem observar o DOM).
   function applyChatBg() {
     if (!current.enabled || !current.bgImage) return;
-    const found = findChatBg();
-    if (!found) return;
-    found.el.dataset.cpcBg = '1';
-    found.el.dataset.cpcLayer = found.layer;
-
     const a = Math.max(0, Math.min(1, current.overlay));
     const overlay = `linear-gradient(rgba(0,0,0,${a}), rgba(0,0,0,${a}))`;
-    const sel = `[data-cpc-bg="1"]${found.layer}`;
     styleEl().textContent = `
-      ${sel} {
+      ${window.CPC_SELECTORS.chatBg} {
         background-image: ${overlay}, url("${cssUrl(current.bgImage)}") !important;
         background-size: cover !important;
         background-position: center !important;
         background-repeat: no-repeat !important;
       }`;
-
-    if (current.autoColors && colorCss) applyColors(); // re-marca header em re-renders
   }
 
   function clearChatBg() {
     const s = document.getElementById(STYLE_ID);
     if (s) s.textContent = '';
-    document.querySelectorAll('[data-cpc-bg="1"]').forEach((el) => {
-      delete el.dataset.cpcBg;
-      delete el.dataset.cpcLayer;
-    });
   }
 
-  function startObserver() {
-    if (observer) return;
-    // Throttle (não-reset): aplica a cada ~250ms mesmo com mensagens entrando em rajada.
-    let pending = false;
-    observer = new MutationObserver(() => {
-      if (pending) return;
-      pending = true;
-      debounceId = setTimeout(() => { pending = false; applyChatBg(); }, 250);
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-  }
-  function stopObserver() {
-    if (observer) { observer.disconnect(); observer = null; }
-  }
+  const startObserver = () => {};
+  const stopObserver = () => {};
 
   async function apply() {
     const prefs = await window.CPC_store.getPrefs();
@@ -340,7 +227,6 @@ window.CPC_Theme = (function () {
     } else {
       root.style.removeProperty('--cpc-accent');
     }
-    root.classList.toggle('cpc-timer-off', !prefs.timerEnabled);
 
     if (current.enabled && current.bgImage) {
       applyChatBg();
