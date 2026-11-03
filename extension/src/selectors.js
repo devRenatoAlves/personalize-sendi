@@ -20,6 +20,9 @@ window.CPC_SELECTORS = {
   message: '[data-message-id]',
   messageText: 'p.whitespace-pre-wrap',
 
+  // Nome do contato no cabeçalho da conversa ("fulano - estabelecimento").
+  contactName: 'header[data-conversa-aberta] button[title^="Ver dados"] p.truncate',
+
   // Logo do app (canto superior esquerdo da barra lateral).
   headerLogo: 'a[href="/dashboard"] > div.aspect-square',
 

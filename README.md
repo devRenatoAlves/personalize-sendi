@@ -16,7 +16,7 @@ com base em atributos estáveis (`data-slot`, `data-message-id`, `aria-label`).
   Papel de parede na área de mensagens, logo trocável, cores dos balões.
 - **IA**: Melhorar / Sugerir / Motivo de finalização (copiar ou finalizar pelo popover nativo).
 - **Cronômetro**: removido. O Sendi já mostra "Em atendimento há…" com cor em cada card.
-- **Sistema do cliente**: precisa de `clientLinkFilter`; o painel de dados do contato ainda não foi mapeado.
+- **Sistema do cliente**: o botão 🔗 aparece quando o nome do contato é `fulano - estabelecimento` (último trecho = uma palavra `a-z0-9-`) e abre `https://<estabelecimento>.<domínio>`. O domínio é definido no popup (campo "Domínio do sistema"). Nome fora do padrão = sem botão.
 - **Não testado ainda**: o clique que finaliza de verdade (é irreversível; teste num atendimento seu).
 
 ## Estrutura
@@ -139,8 +139,3 @@ A lista de motivos é privada: não fica no repositório. Defina a secret `REASO
 cd worker
 npx wrangler secret put REASONS
 ```
-
-## Link do sistema do cliente
-
-O botão só aparece se `clientLinkFilter` (trecho do host, ex.: `meusistema`) estiver definido
-em `cpc_prefs` no `chrome.storage.local`. Vazio = botão desligado.

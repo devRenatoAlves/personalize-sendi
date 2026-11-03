@@ -1,49 +1,43 @@
-// Botão flutuante: abre o sistema do cliente em nova guia.
-// Lê o link direto do painel de identificação (chat-aside--lead) sem precisar abri-lo —
-// o React mantém o painel montado quando a conversa está aberta, então os campos
-// (incl. o link do subdomínio do cliente) ficam legíveis no DOM.
+// Botão flutuante "Sistema do cliente": abre <estabelecimento>.<domínio> em nova guia.
+// O estabelecimento vem do nome do contato no cabeçalho da conversa, no padrão
+// "fulano - estabelecimento" (ex.: "Mariane - boinoespeto" → https://boinoespeto.<domínio>).
+// Fora do padrão = sem botão. O domínio é configurável no popup (clientLinkDomain).
 window.CPC_ClientLink = (function () {
   const S = window.CPC_SELECTORS;
-  const DEFAULT_FILTER = ''; // sem padrão: defina clientLinkFilter (trecho do host do sistema do cliente)
-  let cfg = { enabled: true, filter: DEFAULT_FILTER };
+  let cfg = { enabled: true, domain: '' };
 
   async function reload() {
     const p = await window.CPC_store.getPrefs();
-    cfg = {
-      enabled: p.clientLink !== false,
-      filter: (p.clientLinkFilter || '').trim().toLowerCase() || DEFAULT_FILTER,
-    };
+    cfg = { enabled: p.clientLink !== false, domain: normDomain(p.clientLinkDomain) };
     refresh();
   }
 
-  // Junta todo texto onde o link pode estar: hrefs, valores de campos e o texto do painel.
-  function leadText() {
-    const lead = S.chatAsideLead ? document.querySelector(S.chatAsideLead) : document.querySelector(S.chatSection);
-    if (!lead) return null;
-    const parts = [];
-    lead.querySelectorAll('a[href]').forEach((a) => parts.push(a.getAttribute('href') || ''));
-    lead.querySelectorAll('input, textarea').forEach((i) => parts.push(i.value || ''));
-    parts.push(lead.textContent || '');
-    return parts.join('\n');
+  // Aceita "exemplo.com.br", "https://exemplo.com.br/" ou "*.exemplo.com.br". Inválido → ''.
+  function normDomain(v) {
+    const d = String(v || '').trim().toLowerCase()
+      .replace(/^https?:\/\//, '').replace(/^\*?\./, '').replace(/\/.*$/, '');
+    return /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(d) ? d : '';
   }
 
-  // Acha o link do cliente no painel lead. Reconhece o host que CONTÉM cfg.filter
-  // (ex.: "meusistema"), com ou sem "https://", e adiciona o esquema quando falta.
-  // Captura o host inteiro (subdominio + domínio + TLD), então:
-  //   "cliente.meusistema.com.br" → https://cliente.meusistema.com.br
-  // Um email como "contato@cliente.com.br" não casa (não tem "meusistema").
+  // "fulano - estabelecimento" → "estabelecimento". Regras estritas, de propósito:
+  // precisa do separador " - " e o último trecho tem de ser UMA palavra [a-z0-9-]
+  // (já é um subdomínio válido). Nome com espaço/acento/símbolo no fim → null.
+  function establishment(name) {
+    const parts = String(name || '').trim().split(/\s+-\s+/);
+    if (parts.length < 2 || !parts[0].trim()) return null;
+    const sub = parts[parts.length - 1].trim().toLowerCase();
+    return /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/.test(sub) ? sub : null;
+  }
+
+  function contactName() {
+    const el = document.querySelector(S.contactName);
+    return el ? el.textContent : '';
+  }
+
   function findLink() {
-    if (!cfg.filter) return null;
-    const hay = leadText();
-    if (!hay) return null;
-
-    const esc = cfg.filter.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const re = new RegExp('(?:https?:\\/\\/)?[a-z0-9.-]*' + esc + '[a-z0-9.-]*(?:\\/[^\\s"\'<>]*)?', 'i');
-    const m = hay.match(re);
-    if (!m) return null;
-
-    const url = m[0].replace(/[.,;]+$/, ''); // remove pontuação final
-    return /^https?:\/\//i.test(url) ? url : 'https://' + url;
+    if (!cfg.domain) return null;
+    const sub = establishment(contactName());
+    return sub ? `https://${sub}.${cfg.domain}` : null;
   }
 
   // Vive no dock compartilhado (criado por ai.js), junto do botão "Motivo".
@@ -75,5 +69,5 @@ window.CPC_ClientLink = (function () {
     chrome.storage.onChanged.addListener((c) => { if (c.cpc_prefs) reload(); });
   }
 
-  return { init, refresh };
+  return { init, refresh, establishment };
 })();

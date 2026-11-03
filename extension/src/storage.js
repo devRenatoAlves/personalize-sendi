@@ -9,7 +9,7 @@ window.CPC_store = {
         overlay: 0.4, autoColors: true, paletteHeader: '', paletteSide: '',
         paletteBubbleOut: '', paletteBubbleIn: '',
         logoImage: '', logoRound: false,
-        clientLink: true, clientLinkFilter: '', dockColor: '',
+        clientLink: true, clientLinkDomain: '', dockColor: '',
         aiUrl: '', aiToken: '', aiImprove: true, aiSuggest: true, aiReason: true,
         reasonAction: 'copy', // 'copy' = copiar texto | 'finalize' = finalizar atendimento
       },

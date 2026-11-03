@@ -12,7 +12,7 @@ const DEFAULTS = {
   logoImage: '',
   logoRound: false,
   clientLink: true,
-  clientLinkFilter: '', // sem UI no popup; ajustável só pelo storage (sem padrão: vazio desliga o botão)
+  clientLinkDomain: '',
   dockColor: '',
   aiUrl: '',
   aiToken: '',
@@ -47,6 +47,7 @@ const els = {
   reasonCopy: document.getElementById('reasonCopy'),
   reasonFinish: document.getElementById('reasonFinish'),
   clientLink: document.getElementById('clientLink'),
+  clientLinkDomain: document.getElementById('clientLinkDomain'),
   dockColor: document.getElementById('dockColor'),
   dockColorAuto: document.getElementById('dockColorAuto'),
   dockColorSub: document.getElementById('dockColorSub'),
@@ -101,6 +102,7 @@ async function load() {
   els.aiReason.checked = prefs.aiReason !== false;
   reasonAction = prefs.reasonAction === 'finalize' ? 'finalize' : 'copy';
   els.clientLink.checked = prefs.clientLink !== false;
+  els.clientLinkDomain.value = prefs.clientLinkDomain || '';
   dockManual = !!prefs.dockColor;
   if (prefs.dockColor) els.dockColor.value = prefs.dockColor;
   refreshUI();
@@ -126,6 +128,7 @@ async function save() {
     aiReason: els.aiReason.checked,
     reasonAction,
     clientLink: els.clientLink.checked,
+    clientLinkDomain: els.clientLinkDomain.value.trim(),
     dockColor: dockManual ? els.dockColor.value : '',
   };
   await chrome.storage.local.set({ cpc_prefs });
@@ -133,7 +136,7 @@ async function save() {
 }
 
 ['themeEnabled', 'bgImage', 'logoImage', 'logoRound', 'accent', 'overlay', 'autoColors',
- 'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink'].forEach((k) => {
+ 'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink', 'clientLinkDomain'].forEach((k) => {
   els[k].addEventListener('change', save);
   els[k].addEventListener('input', save);
 });
