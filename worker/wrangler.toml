@@ -1,0 +1,10 @@
+name = "sendi-companion-ai"
+main = "src/worker.js"
+compatibility_date = "2024-11-01"
+
+# Secrets (NÃO ficam aqui — definir via `wrangler secret put`):
+#   GEMINI_API_KEY      — chave da Gemini API (Google AI Studio)
+#   GROQ_API_KEY        — chave da Groq API (Fallback Llama 3)
+#   OPENROUTER_API_KEY  — chave da OpenRouter API (Fallback Llama 3 Free)
+#   SHARED_TOKEN        — token compartilhado entre extensão e Worker (você inventa)
+#   REASONS             — (opcional) motivos de finalização, um por linha ou JSON array

@@ -1,0 +1,33 @@
+# Segredos e credenciais — NUNCA versionar
+.env
+.env.*
+.dev.vars
+*.key
+*.pem
+
+# Cloudflare / Wrangler (cache local contém o ID da conta)
+.wrangler/
+worker/.wrangler/
+worker/node_modules/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Pacotes gerados para as lojas
+*.zip
+
+# Backups de configuração exportados pelo popup (contêm o token do Worker)
+personalize-pro-config-*.json
+
+# Sistema operacional / editores
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+.idea/
+.vscode/
+
+# Ferramentas locais do Claude Code
+.claude/settings.local.json

@@ -1,0 +1,245 @@
+/* Cronômetro injetado em cada card */
+.cpc-timer {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+  color: #fff;
+  background: var(--cpc-accent, #2563eb);
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+/* Esconde timers quando desligado nas preferências */
+.cpc-timer-off .cpc-timer {
+  display: none;
+}
+
+/* Cores de SLA (sobrescrevem o accent) */
+.cpc-timer.cpc-sla-green { background: #16a34a !important; }
+.cpc-timer.cpc-sla-yellow { background: #d97706 !important; }
+.cpc-timer.cpc-sla-red { background: #dc2626 !important; }
+
+/* Barra flutuante de IA — pílula única */
+#cpc-ai-bar {
+  position: fixed;
+  bottom: 74px;
+  right: 20px;
+  z-index: 99999;
+  display: inline-flex;
+  align-items: stretch;
+  background: linear-gradient(135deg, var(--cpc-accent, #2563eb), #7c3aed);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,.45);
+  font: 600 11px system-ui, -apple-system, sans-serif;
+  transition: opacity .15s, transform .15s;
+}
+#cpc-ai-bar:hover { transform: translateY(-1px); }
+#cpc-ai-bar button {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  padding: 6px 11px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background .15s;
+}
+#cpc-ai-bar button:hover { background: rgba(255,255,255,.18); }
+#cpc-ai-bar button + button { border-left: 1px solid rgba(255,255,255,.25); }
+#cpc-ai-bar.cpc-busy { opacity: .55; pointer-events: none; }
+#cpc-ai-bar.cpc-busy::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: repeating-linear-gradient(45deg, rgba(255,255,255,.12) 0 8px, transparent 8px 16px);
+  animation: cpc-busy-slide 0.8s linear infinite;
+}
+@keyframes cpc-busy-slide { from { background-position: 0 0; } to { background-position: 32px 0; } }
+
+/* Popup de resultado da IA */
+#cpc-ai-pop {
+  position: fixed;
+  bottom: 104px;
+  right: 18px;
+  width: 360px;
+  max-width: 80vw;
+  z-index: 99999;
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.45);
+  display: none;
+}
+#cpc-ai-pop .cpc-ai-pop-text {
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  max-height: 240px;
+  overflow: auto;
+  margin-bottom: 10px;
+}
+#cpc-ai-pop .cpc-ai-pop-actions { display: flex; gap: 8px; justify-content: flex-end; }
+#cpc-ai-pop button {
+  border: 0; border-radius: 6px; padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer;
+}
+#cpc-ai-pop #cpc-ai-apply { background: #16a34a; color: #fff; }
+#cpc-ai-pop #cpc-ai-close { background: #334155; color: #e2e8f0; }
+
+/* Popup de motivo de finalização */
+#cpc-ai-reason-pop {
+  position: fixed;
+  bottom: 120px;
+  right: 18px;
+  width: 360px;
+  max-width: 80vw;
+  z-index: 99999;
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.45);
+}
+#cpc-ai-reason-pop .cpc-r-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-bottom: 12px;
+}
+#cpc-ai-reason-pop .cpc-r-title { font-size: 13px; font-weight: 700; color: #f1f5f9; }
+#cpc-ai-reason-pop .cpc-r-mode {
+  flex: none; font-size: 10.5px; font-weight: 700; letter-spacing: .02em;
+  padding: 3px 8px; border-radius: 999px; white-space: nowrap;
+}
+#cpc-ai-reason-pop .cpc-r-mode--copy { background: rgba(148,163,184,.18); color: #cbd5e1; }
+#cpc-ai-reason-pop .cpc-r-mode--finish { background: rgba(22,163,74,.22); color: #4ade80; }
+#cpc-ai-reason-pop .cpc-r-reco,
+#cpc-ai-reason-pop .cpc-r-sub {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .6px;
+  color: #94a3b8; margin: 0 0 7px; font-weight: 700;
+}
+#cpc-ai-reason-pop .cpc-r-sub { margin-top: 14px; }
+#cpc-ai-reason-pop .cpc-r-just { font-size: 12px; color: #cbd5e1; margin-top: 9px; font-style: italic; line-height: 1.45; }
+
+/* Cada motivo: botão clicável de largura total */
+#cpc-ai-reason-pop .cpc-r-item {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  text-align: left; cursor: pointer;
+  border: 1px solid #334155; border-radius: 9px;
+  padding: 11px 12px; margin-bottom: 7px;
+  background: #0f172a; color: #e2e8f0;
+  transition: border-color .15s, background .15s, transform .1s;
+}
+#cpc-ai-reason-pop .cpc-r-item:hover { border-color: #6366f1; background: #16213a; }
+#cpc-ai-reason-pop .cpc-r-item:active { transform: scale(.99); }
+#cpc-ai-reason-pop .cpc-r-item--main { background: rgba(22,163,74,.12); border-color: #16a34a; }
+#cpc-ai-reason-pop .cpc-r-item--main:hover { background: rgba(22,163,74,.2); border-color: #22c55e; }
+#cpc-ai-reason-pop .cpc-r-text { flex: 1; font-size: 12.5px; font-weight: 600; line-height: 1.35; }
+#cpc-ai-reason-pop .cpc-r-act {
+  flex: none; font-size: 15px; line-height: 1; opacity: .55;
+  transition: opacity .15s, transform .15s;
+}
+#cpc-ai-reason-pop .cpc-r-item:hover .cpc-r-act { opacity: 1; transform: scale(1.15); }
+#cpc-ai-reason-pop .cpc-r-legend { font-size: 11px; color: #94a3b8; margin-top: 12px; line-height: 1.45; }
+#cpc-ai-reason-pop .cpc-r-legend b { color: #cbd5e1; }
+#cpc-ai-reason-pop.cpc-busy { opacity: .6; pointer-events: none; }
+#cpc-ai-reason-pop .cpc-r-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
+#cpc-ai-reason-pop #cpc-r-close { background: #334155; color: #e2e8f0; border: 0; border-radius: 7px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; }
+#cpc-ai-reason-pop #cpc-r-close:hover { background: #475569; }
+
+/* Toast */
+#cpc-ai-toast {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  background: #111827;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.4);
+  display: none;
+}
+
+/* Tema: imagem de fundo opcional aplicada ao corpo do app */
+.cpc-theme-on body {
+  background-image: var(--cpc-bg-image, none);
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+
+/* Dock flutuante (direita, abaixo do header): ações por conversa — Motivo + Link do cliente */
+#cpc-dock {
+  position: fixed;
+  top: 144px;
+  right: 18px;
+  z-index: 2147483600;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+/* Balão só-ícone que EXPANDE no hover revelando o nome (label inline cresce da direita p/ esquerda) */
+#cpc-dock .cpc-dock-btn {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  padding: 9px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 999px;
+  background: var(--cpc-dock-bg, linear-gradient(135deg, var(--cpc-accent, #2563eb), #7c3aed));
+  color: #fff;
+  font: 600 12.5px/1 system-ui, -apple-system, sans-serif;
+  letter-spacing: .01em;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .42);
+  transition: filter .15s, transform .15s, box-shadow .15s;
+}
+#cpc-dock .cpc-dock-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 0 9px 24px rgba(0, 0, 0, .5);
+}
+#cpc-dock .cpc-dock-btn:active { transform: translateY(0); }
+#cpc-dock .cpc-dock-btn.cpc-busy { opacity: .55; pointer-events: none; }
+
+/* Ícone num disco translúcido (sempre visível) */
+#cpc-dock .cpc-dock-btn::before {
+  content: attr(data-icon);
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .18);
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* Nome: oculto (largura 0), expande no hover */
+#cpc-dock .cpc-dock-btn .cpc-dock-label {
+  max-width: 0;
+  margin-left: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width .2s ease, margin-left .2s ease, opacity .15s ease;
+}
+#cpc-dock .cpc-dock-btn:hover .cpc-dock-label {
+  max-width: 220px;
+  margin-left: 8px;
+  margin-right: 3px;
+  opacity: 1;
+}

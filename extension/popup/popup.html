@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-soft: #243144;
+      --border: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #2563eb;
+      --accent-2: #7c3aed;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      width: 320px;
+      margin: 0;
+      font: 13px/1.45 system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+    }
+    header .badge {
+      width: 34px; height: 34px; flex: none;
+      display: grid; place-items: center;
+      background: rgba(255, 255, 255, .18);
+      border-radius: 9px; font-size: 18px;
+    }
+    header h1 { font-size: 14px; margin: 0; font-weight: 600; }
+    header small { display: block; font-size: 11px; opacity: .85; }
+
+    /* Layout */
+    .body { display: flex; flex-direction: column; gap: 12px; padding: 14px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+    .card-title {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 700; letter-spacing: .04em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    /* Rows */
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .row + .row,
+    .field + .row,
+    .row + .field,
+    .field + .field { margin-top: 12px; }
+    .row-text { min-width: 0; }
+    .label { font-weight: 600; }
+    .sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+    /* Text inputs */
+    .field > label { display: block; font-weight: 600; margin-bottom: 6px; }
+    input[type="text"] {
+      width: 100%; padding: 8px 10px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 12px;
+    }
+    input[type="text"]::placeholder { color: #64748b; }
+    input[type="text"]:focus { outline: none; border-color: var(--accent); }
+    input[type="number"] {
+      width: 56px; padding: 7px 8px; border-radius: 8px; text-align: center;
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); font-size: 12px;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    input[type="number"]:focus { outline: none; border-color: var(--accent); }
+
+    /* Toggle switch */
+    .switch { position: relative; width: 38px; height: 22px; flex: none; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; inset: 0; cursor: pointer;
+      background: var(--border); border-radius: 22px; transition: .2s;
+    }
+    .slider::before {
+      content: ""; position: absolute; height: 16px; width: 16px;
+      left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s;
+    }
+    .switch input:checked + .slider { background: var(--accent); }
+    .switch input:checked + .slider::before { transform: translateX(16px); }
+
+    /* Range */
+    input[type="range"] { flex: 1; accent-color: var(--accent); }
+    .val {
+      width: 40px; text-align: right; color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Color swatch */
+    input[type="color"] {
+      width: 30px; height: 30px; flex: none; padding: 0; cursor: pointer;
+      border: 1px solid var(--border); border-radius: 8px; background: none;
+    }
+    input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+    input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
+
+    /* Small button (Auto) */
+    .btn {
+      flex: none; padding: 5px 12px; border-radius: 7px; cursor: pointer;
+      border: 1px solid var(--border); background: var(--card-soft);
+      color: var(--text); font-size: 11px; font-weight: 600;
+    }
+    .btn:hover { border-color: var(--accent); }
+    .btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn-row { display: flex; gap: 8px; }
+    .btn-row .btn { flex: 1; padding: 8px; text-align: center; }
+
+    /* Gated sub-options */
+    .gated { transition: opacity .2s; }
+    .gated.disabled { opacity: .4; pointer-events: none; }
+    .divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+    footer { padding: 2px 16px 16px; text-align: center; }
+    footer small { color: var(--muted); font-size: 10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="badge">⏱️</span>
+    <div>
+      <h1>Personalize Pro</h1>
+      <small>Cronômetro, temas &amp; assistente de IA</small>
+    </div>
+  </header>
+
+  <div class="body">
+
+    <!-- Cronômetro -->
+    <section class="card">
+      <div class="card-title">⏱️ Cronômetro</div>
+
+      <div class="row">
+        <div class="row-text">
+          <div class="label">Cronômetro nos cards</div>
+          <div class="sub">Inicia ao clicar em “Atender”.</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="timerEnabled" /><span class="slider"></span></label>
+      </div>
+
+      <div class="row">
+        <div class="row-text">
+          <div class="label">Cores de SLA</div>
+          <div class="sub">Verde → amarelo → vermelho conforme o tempo.</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="slaColors" /><span class="slider"></span></label>
+      </div>
+
+      <div class="gated" id="slaOpts">
+        <div class="row">
+          <div class="row-text">
+            <div class="label">🟡 Amarelo após</div>
+            <div class="sub">Minutos até ficar amarelo.</div>
+          </div>
+          <input type="number" id="slaYellow" min="1" max="600" step="1" />
+        </div>
+        <div class="row">
+          <div class="row-text">
+            <div class="label">🔴 Vermelho após</div>
+            <div class="sub">Minutos até ficar vermelho.</div>
+          </div>
+          <input type="number" id="slaRed" min="1" max="600" step="1" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="row-text">
+          <div class="label">Cor do cronômetro</div>
+          <div class="sub">Aplica no badge do timer.</div>
+        </div>
+        <input type="color" id="accent" value="#2563eb" />
+      </div>
+    </section>
+
+    <!-- Tema -->
+    <section class="card">
+      <div class="card-title">🎨 Tema personalizado</div>
+
+      <div class="row">
+        <div class="row-text">
+          <div class="label">Ativar tema</div>
+          <div class="sub">Papel de parede na área do chat.</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="themeEnabled" /><span class="slider"></span></label>
+      </div>
+
+      <div class="gated" id="themeOpts">
+        <div class="divider"></div>
+
+        <div class="field">
+          <label for="bgImage">Imagem de fundo</label>
+          <input type="text" id="bgImage" placeholder="https://…/imagem.jpg" />
+        </div>
+
+        <div class="field">
+          <label for="logoImage">Logo da empresa</label>
+          <input type="text" id="logoImage" placeholder="https://…/logo.png" />
+          <div class="sub" style="margin-top:6px">Substitui a logo do header. Vazio = padrão.</div>
+        </div>
+
+        <div class="row">
+          <div class="row-text">
+            <div class="label">Logo redonda</div>
+            <div class="sub">Recorta em círculo. Desligado = retangular.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="logoRound" /><span class="slider"></span></label>
+        </div>
+
+        <div class="row">
+          <div class="row-text"><div class="label">Escurecer fundo</div></div>
+          <input type="range" id="overlay" min="0" max="90" step="5" />
+          <span class="val" id="overlayVal">40%</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+          <div class="row-text">
+            <div class="label">Paleta de cores</div>
+            <div class="sub" id="paletteSub">Usando as cores da imagem.</div>
+          </div>
+          <button type="button" class="btn" id="paletteClear">Auto</button>
+        </div>
+
+        <div class="row">
+          <div class="row-text">
+            <div class="label">Header e botões</div>
+            <div class="sub">Header e botões.</div>
+          </div>
+          <input type="color" id="paletteHeader" value="#2563eb" />
+        </div>
+
+        <div class="row">
+          <div class="row-text">
+            <div class="label">Restante</div>
+            <div class="sub">Lista, busca, rodapé e inputs.</div>
+          </div>
+          <input type="color" id="paletteSide" value="#1e293b" />
+        </div>
+
+        <div class="row">
+          <div class="row-text">
+            <div class="label">Balão enviado</div>
+            <div class="sub">Mensagens que você envia.</div>
+          </div>
+          <input type="color" id="paletteBubbleOut" value="#2563eb" />
+        </div>
+
+        <div class="row">
+          <div class="row-text">
+            <div class="label">Balão recebido</div>
+            <div class="sub">Mensagens do cliente.</div>
+          </div>
+          <input type="color" id="paletteBubbleIn" value="#1e293b" />
+        </div>
+
+        <div class="row">
+          <div class="row-text">
+            <div class="label">Cores automáticas</div>
+            <div class="sub">Tinta header e lista com as cores da imagem.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="autoColors" /><span class="slider"></span></label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Assistente de IA -->
+    <section class="card">
+      <div class="card-title">🤖 Assistente de IA</div>
+      <div class="sub" style="margin:-4px 0 12px">Reescrita, sugestão e motivo (via Worker).</div>
+
+      <div class="field">
+        <label for="aiUrl">URL do Worker</label>
+        <input type="text" id="aiUrl" placeholder="https://….workers.dev/ai" />
+      </div>
+
+      <div class="field">
+        <label for="aiToken">Token</label>
+        <input type="text" id="aiToken" placeholder="SHARED_TOKEN" />
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div class="row-text"><div class="label">Botão “Melhorar”</div></div>
+        <label class="switch"><input type="checkbox" id="aiImprove" /><span class="slider"></span></label>
+      </div>
+      <div class="row">
+        <div class="row-text"><div class="label">Sugerir resposta</div></div>
+        <label class="switch"><input type="checkbox" id="aiSuggest" /><span class="slider"></span></label>
+      </div>
+      <div class="row">
+        <div class="row-text"><div class="label">Motivo de finalização</div></div>
+        <label class="switch"><input type="checkbox" id="aiReason" /><span class="slider"></span></label>
+      </div>
+
+      <div class="gated" id="reasonOpts">
+        <div class="row">
+          <div class="row-text">
+            <div class="label">Ação ao clicar no motivo</div>
+            <div class="sub">Copiar o texto ou finalizar o atendimento.</div>
+          </div>
+        </div>
+        <div class="btn-row" id="reasonActionRow">
+          <button type="button" class="btn" id="reasonCopy" data-v="copy">📋 Copiar</button>
+          <button type="button" class="btn" id="reasonFinish" data-v="finalize">✔️ Finalizar</button>
+        </div>
+        <div class="sub" style="margin-top:8px; color:#64748b">⚠️ “Finalizar” encerra o atendimento de verdade (irreversível).</div>
+      </div>
+    </section>
+
+    <!-- Link do cliente -->
+    <section class="card">
+      <div class="card-title">🔗 Link do cliente</div>
+
+      <div class="row">
+        <div class="row-text">
+          <div class="label">Botão flutuante</div>
+          <div class="sub">Abre o sistema do cliente em nova guia.</div>
+        </div>
+        <label class="switch"><input type="checkbox" id="clientLink" /><span class="slider"></span></label>
+      </div>
+    </section>
+
+    <!-- Balões flutuantes -->
+    <section class="card">
+      <div class="card-title">🫧 Balões flutuantes</div>
+
+      <div class="row">
+        <div class="row-text">
+          <div class="label">Cor dos balões</div>
+          <div class="sub" id="dockColorSub">Cor padrão (degradê).</div>
+        </div>
+        <button type="button" class="btn" id="dockColorAuto">Auto</button>
+      </div>
+
+      <div class="row">
+        <div class="row-text">
+          <div class="label">Cor personalizada</div>
+          <div class="sub">Motivo, Sugerir, Melhorar e Link.</div>
+        </div>
+        <input type="color" id="dockColor" value="#2563eb" />
+      </div>
+    </section>
+
+    <!-- Backup -->
+    <section class="card">
+      <div class="card-title">💾 Backup</div>
+      <div class="sub" style="margin:-4px 0 10px">Salva ou restaura todas as configurações.</div>
+
+      <div class="btn-row">
+        <button type="button" class="btn" id="exportBtn">⬇️ Exportar</button>
+        <button type="button" class="btn" id="importBtn">⬆️ Importar</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json" hidden />
+      <div class="sub" id="backupStatus" style="margin-top:8px; min-height:14px"></div>
+      <div class="sub" style="margin-top:4px; color:#64748b">⚠️ O arquivo inclui o token da IA. Guarde com cuidado.</div>
+    </section>
+
+  </div>
+
+  <footer><small>Alterações aplicam ao recarregar o Sendi.</small></footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

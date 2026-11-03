@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Personalize Sendi",
+  "version": "0.1.0",
+  "description": "Cronômetro com SLA, temas personalizados e assistente de IA (melhorar, sugerir, motivo) para o Sendi.",
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "personalize-sendi@personalizenato.com",
+      "strict_min_version": "109.0",
+      "data_collection_permissions": {
+        "required": ["personalCommunications"]
+      }
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "src/background.js",
+    "scripts": ["src/background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.chatpro.com.br/*"],
+      "js": ["src/selectors.js", "src/storage.js", "src/timer.js", "src/theme.js", "src/ai.js", "src/clientlink.js", "src/content.js"],
+      "css": ["src/styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Personalize Sendi",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  }
+}
