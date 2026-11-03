@@ -217,7 +217,7 @@ O modo `reason` usa JSON mode (`responseMimeType` / `response_format`).
 - **Seletores quebram com mudanças do Sendi.** Centralize qualquer seletor novo em
   `selectors.js`. Strings de texto (`"Atender"`, `"transferida"`, `"finalizado"`,
   `"Aguardando atendimento"`) estão em `timer.js` e são sensíveis ao idioma/cópia do site.
-- **`manifest.json` matches** = `https://*.sendi.example/*`. Se o domínio real do Sendi
+- **`manifest.json` matches** = `https://*.sendi.chat/*`. Se o domínio real do Sendi
   for outro, trocar aqui (ver README).
 - Globais `window.CPC_*` substituem módulos — ao adicionar arquivo, registrá-lo na ordem
   certa do `content_scripts.js` no manifest.

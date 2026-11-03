@@ -90,7 +90,7 @@ Depois, no popup da extensão: preencher **URL do Worker** + **token**.
 
 ## ⚠️ Antes de usar — confirmar
 
-- **Domínio do Sendi:** `manifest.json` usa `https://*.sendi.example/*`.
+- **Domínio do Sendi:** `manifest.json` usa `https://*.sendi.chat/*`.
   Trocar para o domínio real onde o site roda (ver barra de endereço).
 - **Gatilho do timer (início):** clique em **"Atender"** — pickup real, carimba `Date.now()` no
   segundo exato. Enquanto `Aguardando atendimento`, NÃO conta. Persistido por UUID; trocar de aba
