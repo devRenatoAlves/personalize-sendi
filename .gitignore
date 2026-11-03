@@ -19,7 +19,7 @@ yarn-error.log*
 *.zip
 
 # Backups de configuração exportados pelo popup (contêm o token do Worker)
-personalize-pro-config-*.json
+personalize-sendi-config-*.json
 
 # Sistema operacional / editores
 Thumbs.db

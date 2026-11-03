@@ -56,8 +56,8 @@ Ao gerar um pacote para as lojas:
 ```powershell
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$root = "C:\dev-projects\chatpro-extensao\extension"
-$out  = "C:\dev-projects\chatpro-extensao\personalize-sendi-firefox.zip"
+$root = "C:\dev-projects\personalize-sendi\extension"
+$out  = "C:\dev-projects\personalize-sendi\personalize-sendi-firefox.zip"
 if (Test-Path $out) { Remove-Item $out -Force }
 $zip = [System.IO.Compression.ZipFile]::Open($out, [System.IO.Compression.ZipArchiveMode]::Create)
 try {

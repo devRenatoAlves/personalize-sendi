@@ -184,12 +184,12 @@ function backupStatus(msg, ok = true) {
 async function exportPrefs() {
   const { cpc_prefs } = await chrome.storage.local.get('cpc_prefs');
   const prefs = Object.assign({}, DEFAULTS, cpc_prefs || {});
-  const payload = { app: 'personalize-pro', version: 1, prefs };
+  const payload = { app: 'personalize-sendi', version: 1, prefs };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `personalize-pro-config-${new Date().toISOString().slice(0, 10)}.json`;
+  a.download = `personalize-sendi-config-${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
   URL.revokeObjectURL(url);
   backupStatus('Configurações exportadas.');
