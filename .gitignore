@@ -31,3 +31,6 @@ Desktop.ini
 
 # Ferramentas locais do Claude Code
 .claude/settings.local.json
+
+# Lista real de motivos de finalização (privada; vai para a secret REASONS)
+worker/reasons.txt

@@ -134,10 +134,13 @@ Worker em `GET /privacy`, URL exigida pelas lojas).
 
 ## Configurando os motivos de finalização
 
-A lista de motivos é privada: não fica no repositório. Defina a secret `REASONS` no Worker
-(um motivo por linha ou um JSON array). Sem ela, vale uma lista genérica de exemplo.
+A lista de motivos é privada: não fica no repositório. Mantenha-a em `worker/reasons.txt`
+(um motivo por linha; o arquivo está no `.gitignore`) e envie para o Worker:
 
 ```
 cd worker
-npx wrangler secret put REASONS
+npx wrangler secret put REASONS < reasons.txt
 ```
+
+Sem a secret, vale uma lista genérica de exemplo (`DEFAULT_REASONS` em `worker.js`).
+Para trocar a lista: edite `reasons.txt` e rode o comando de novo (não precisa de novo deploy).
