@@ -13,7 +13,6 @@ com base em atributos estáveis (`data-slot`, `data-message-id`, `aria-label`).
 
 - **Modo clean**: esconde menus/cabeçalho e deixa só a lista de atendimentos + a conversa ocupando o resto (bom para notebook). Liga pelo popup ou pelo botão "Modo clean" no canto inferior esquerdo.
 - **Modo vidro** (liquid glass): o papel de parede cobre a tela toda e os painéis com informação (lista de conversas, cabeçalhos, barra de resposta, balões, menus) ficam translúcidos e desfocados. Opacidade e desfoque ajustáveis no popup. Exige uma imagem de fundo.
-- **Foto do contato ampliada**: clicar no círculo da foto no cabeçalho abre um visualizador (Melhorada / Original / Salvar). O Sendi só guarda a foto em 96×96; a versão melhorada usa reamostragem Lanczos + nitidez leve e não cria detalhe real. As imagens enviadas nas mensagens já abrem em tamanho original pelo próprio Sendi.
 - **Tema**: o Sendi usa variáveis CSS (shadcn). A paleta sobrescreve `--background`, `--primary`,
   `--sidebar-background` etc., e o texto troca entre claro/escuro conforme a cor escolhida.
   Papel de parede na área de mensagens, logo trocável, cores dos balões.
@@ -36,6 +35,7 @@ extension/
     storage.js     # chrome.storage: timers + preferências
     theme.js       # papel de parede + paleta de cores aplicada por stylesheet
     ai.js          # assistente IA: Melhorar, Sugerir, Motivo (fala com o Worker)
+    icons.js       # ícones Lucide embutidos (SVG), sem emojis
     clean.js       # modo clean (CSS em styles.css, atrás de html.cpc-clean)
     clientlink.js  # botão "Sistema do cliente" (lê a URL do painel do lead)
     content.js     # entrada: MutationObserver + init
@@ -146,3 +146,10 @@ npx wrangler secret put REASONS < reasons.txt
 
 Sem a secret, vale uma lista genérica de exemplo (`DEFAULT_REASONS` em `worker.js`).
 Para trocar a lista: edite `reasons.txt` e rode o comando de novo (não precisa de novo deploy).
+
+## Ícones
+
+Os ícones são do [Lucide](https://lucide.dev) (licença ISC), embutidos como SVG em
+`extension/src/icons.js` (sem CDN). Para adicionar um: copie o conteúdo interno do SVG do
+Lucide para o objeto `CPC_ICONS` e use `CPC_icon('nome', tamanho)`; em HTML estático,
+`<i data-icon="nome" data-size="16"></i>`.

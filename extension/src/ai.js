@@ -94,9 +94,9 @@ window.CPC_AI = (function () {
   // Botões da IA no dock (Melhorar/Sugerir/Motivo). Só-ícone; nome aparece no hover.
   // Ordem no dock (cima→baixo): Motivo(1), Link(2, clientlink.js), Sugerir(3), Melhorar(4).
   const DOCK_BTNS = [
-    { id: 'cpc-ai-reason', icon: '📋', label: 'Motivo', order: 1, on: () => cfg.reason, click: onReason },
-    { id: 'cpc-ai-suggest', icon: '💡', label: 'Sugerir', order: 3, on: () => cfg.suggest, click: onSuggest },
-    { id: 'cpc-ai-improve', icon: '✨', label: 'Melhorar', order: 4, on: () => cfg.improve, click: onImprove },
+    { id: 'cpc-ai-reason', icon: 'clipboard-list', label: 'Motivo', order: 1, on: () => cfg.reason, click: onReason },
+    { id: 'cpc-ai-suggest', icon: 'lightbulb', label: 'Sugerir', order: 3, on: () => cfg.suggest, click: onSuggest },
+    { id: 'cpc-ai-improve', icon: 'wand-sparkles', label: 'Melhorar', order: 4, on: () => cfg.improve, click: onImprove },
   ];
 
   function ensureDockButtons() {
@@ -111,9 +111,8 @@ window.CPC_AI = (function () {
         el.type = 'button';
         el.className = 'cpc-dock-btn';
         el.style.order = String(b.order);
-        el.dataset.icon = b.icon;
         el.title = b.label;
-        el.innerHTML = `<span class="cpc-dock-label">${b.label}</span>`;
+        el.innerHTML = window.CPC_icon(b.icon, 17) + `<span class="cpc-dock-label">${b.label}</span>`;
         el.addEventListener('click', b.click);
         dock().appendChild(el);
       }
@@ -262,7 +261,7 @@ window.CPC_AI = (function () {
     pop.id = 'cpc-ai-reason-pop';
 
     const finalize = cfg.reasonAction === 'finalize';
-    const actIcon = finalize ? '✔️' : '📋';
+    const actIcon = window.CPC_icon(finalize ? 'check' : 'copy', 15);
 
     // Cada motivo é UMA linha clicável; a ação (copiar/finalizar) vem das preferências.
     const row = (reason, main) => `
@@ -276,7 +275,7 @@ window.CPC_AI = (function () {
     pop.innerHTML = `
       <div class="cpc-r-head">
         <span class="cpc-r-title">Motivo de finalização</span>
-        <span class="cpc-r-mode cpc-r-mode--${finalize ? 'finish' : 'copy'}">${finalize ? '✔️ Finalizar' : '📋 Copiar'}</span>
+        <span class="cpc-r-mode cpc-r-mode--${finalize ? 'finish' : 'copy'}">${window.CPC_icon(finalize ? 'check' : 'copy', 13)}${finalize ? 'Finalizar' : 'Copiar'}</span>
       </div>
       <div class="cpc-r-reco">Recomendado</div>
       ${row(data.reason, true)}

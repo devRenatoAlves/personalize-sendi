@@ -26,9 +26,6 @@ window.CPC_SELECTORS = {
   // Nome do contato no cabeçalho da conversa ("fulano - estabelecimento").
   contactName: 'header[data-conversa-aberta] button[title^="Ver dados"] p.truncate',
 
-  // Círculo da foto do contato no cabeçalho da conversa.
-  headerAvatar: 'header[data-conversa-aberta] [data-slot="avatar"]',
-
   // Logo do app (canto superior esquerdo da barra lateral).
   headerLogo: 'a[href="/dashboard"] > div.aspect-square',
 

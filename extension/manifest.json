@@ -27,7 +27,7 @@
   "content_scripts": [
     {
       "matches": ["https://*.sendi.chat/*"],
-      "js": ["src/selectors.js", "src/storage.js", "src/theme.js", "src/clean.js", "src/ai.js", "src/clientlink.js", "src/avatar.js", "src/content.js"],
+      "js": ["src/selectors.js", "src/icons.js", "src/storage.js", "src/theme.js", "src/clean.js", "src/ai.js", "src/clientlink.js", "src/content.js"],
       "css": ["src/styles.css"],
       "run_at": "document_idle"
     }

@@ -51,9 +51,8 @@ window.CPC_ClientLink = (function () {
       btn.type = 'button';
       btn.className = 'cpc-dock-btn';
       btn.style.order = '2';
-      btn.dataset.icon = '🔗';
       btn.title = 'Sistema do cliente';
-      btn.innerHTML = '<span class="cpc-dock-label">Sistema do cliente</span>';
+      btn.innerHTML = window.CPC_icon('external-link', 17) + '<span class="cpc-dock-label">Sistema do cliente</span>';
       btn.addEventListener('click', () => {
         const u = btn.dataset.url;
         if (u) window.open(u, '_blank', 'noopener');

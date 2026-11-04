@@ -182,18 +182,13 @@
 #cpc-dock .cpc-dock-btn:active { transform: translateY(0); }
 #cpc-dock .cpc-dock-btn.cpc-busy { opacity: .55; pointer-events: none; }
 
-/* Ícone num disco translúcido (sempre visível) */
-#cpc-dock .cpc-dock-btn::before {
-  content: attr(data-icon);
+/* Ícone (SVG Lucide) num disco translúcido, sempre visível */
+#cpc-dock .cpc-dock-btn > .cpc-icon {
   flex: none;
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
+  box-sizing: content-box;
+  padding: 3px;
   border-radius: 50%;
   background: rgba(255, 255, 255, .18);
-  font-size: 13px;
-  line-height: 1;
 }
 
 /* Nome: oculto (largura 0), expande no hover */
@@ -234,6 +229,7 @@ html.cpc-clean footer[data-slot="composer"] > div:not(:first-child) { margin-top
 html.cpc-clean footer[data-slot="composer"] > div:not(:first-child) button { height: 24px !important; padding: 0 10px !important; font-size: 11px !important; }
 
 /* Botão do modo clean: pílula discreta só-ícone (o nome vai no tooltip). */
+#cpc-clean-toggle .cpc-icon { display: block; }
 #cpc-clean-toggle {
   position: fixed; left: 8px; bottom: 8px; z-index: 2147483000;
   width: 26px; height: 26px; padding: 0; display: grid; place-items: center;
@@ -253,17 +249,9 @@ html.cpc-clean footer[data-slot="composer"] > div:not(:first-child) button { hei
   width: 30px; height: 30px; padding: 0; justify-content: center;
   box-shadow: none; transform: none;
 }
-#cpc-dock.cpc-inline .cpc-dock-btn::before { background: transparent; width: auto; height: auto; font-size: 15px; }
+#cpc-dock.cpc-inline .cpc-dock-btn > .cpc-icon { background: transparent; padding: 0; }
 #cpc-dock.cpc-inline .cpc-dock-label { display: none; }
 
-/* Visualizador da foto do contato */
-#cpc-avatar-view { position: fixed; inset: 0; z-index: 2147483500; display: grid; place-items: center; background: rgba(0,0,0,.72); backdrop-filter: blur(6px); }
-#cpc-avatar-view .cpc-av-card { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 92vw; max-height: 94vh; padding: 14px; border-radius: 16px; background: #111827; color: #e5e7eb; font: 13px/1.35 system-ui, sans-serif; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
-#cpc-avatar-view .cpc-av-img { width: min(70vh, 80vw, 576px); height: min(70vh, 80vw, 576px); border-radius: 12px; object-fit: contain; background: #000; }
-#cpc-avatar-view .cpc-av-name { font-weight: 600; font-size: 14px; }
-#cpc-avatar-view .cpc-av-bar { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-#cpc-avatar-view .cpc-av-bar button { padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: #1f2937; color: #e5e7eb; font: 600 12px system-ui, sans-serif; cursor: pointer; }
-#cpc-avatar-view .cpc-av-bar button:hover { background: #374151; }
-#cpc-avatar-view .cpc-av-bar button.cpc-active { background: var(--cpc-dock-bg, #2563eb); border-color: transparent; color: #fff; }
-#cpc-avatar-view .cpc-av-note { max-width: 420px; text-align: center; font-size: 11px; color: #94a3b8; }
-[data-conversa-aberta] [data-slot="avatar"]:has(img) { cursor: zoom-in; }
+/* Ícones inline em textos/botões do ícone da extensão */
+.cpc-icon { vertical-align: -0.15em; }
+#cpc-ai-reason-pop .cpc-r-mode .cpc-icon { margin-right: 4px; }

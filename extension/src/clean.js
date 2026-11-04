@@ -19,7 +19,7 @@ window.CPC_Clean = (function () {
       });
       document.body.appendChild(b);
     }
-    b.textContent = on ? '⤢' : '⤡';
+    b.innerHTML = window.CPC_icon(on ? 'minimize-2' : 'maximize-2', 14);
     b.title = on ? 'Sair do modo clean (voltar à interface completa)' : 'Modo clean: esconde menus e deixa só atendimentos + conversa';
     b.classList.toggle('cpc-on', on);
   }

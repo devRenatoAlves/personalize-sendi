@@ -99,11 +99,12 @@ Dois componentes independentes:
 Content scripts carregados **em ordem** pelo manifest (cada um expõe um global `window.CPC_*`;
 sem módulos ES, a ordem importa):
 
-`selectors.js` → `storage.js` → `theme.js` → `clean.js` → `ai.js` → `clientlink.js` → `content.js`
+`selectors.js` → `icons.js` → `storage.js` → `theme.js` → `clean.js` → `ai.js` → `clientlink.js` → `content.js`
 
 - **`selectors.js`** — todos os seletores DOM do Sendi. O Sendi é Vue + Tailwind/shadcn (classes
   utilitárias instáveis), então os seletores usam atributos estáveis: `data-slot`,
   `data-message-id`, `data-conversa-aberta`, `aria-label`. Se algo quebrar, comece aqui.
+- **`icons.js`** — ícones Lucide (ISC) embutidos; `CPC_icon(nome, tam)` devolve o SVG (`currentColor`). Sem emojis na UI: use sempre ícone.
 - **`storage.js`** — wrapper de `chrome.storage.local`; `getPrefs()` define os defaults
   (toda pref nova precisa de default aqui).
 - **`theme.js`** — o Sendi usa variáveis CSS (`--background`, `--primary`, `--sidebar-background`…).
@@ -122,7 +123,6 @@ sem módulos ES, a ordem importa):
   (`justify-end` = equipe, `justify-start` = cliente). Finalizar abre o popover nativo
   (`[data-slot=popover-content]` com `command-input` e `command-item`), filtra digitando e clica
   no item — **irreversível**, pede `confirm()`.
-- **`avatar.js`** — visualizador da foto do contato (clique no `headerAvatar`, captura antes do Sendi abrir o painel). A origem é 96×96 (`/chat/conversations/{id}/avatar` ignora parâmetros de tamanho); `enhance()` faz Lanczos-3 6× + máscara de nitidez no canvas.
 - **`clientlink.js`** — botão 🔗: nome do contato `fulano - estabelecimento` →
   `https://<estabelecimento>.<clientLinkDomain>`. Fora do padrão = sem botão.
 - **Cronômetro**: não existe; o Sendi mostra "Em atendimento há…" nos cards.

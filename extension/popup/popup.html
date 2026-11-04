@@ -132,11 +132,14 @@
 
     footer { padding: 2px 16px 16px; text-align: center; }
     footer small { color: var(--muted); font-size: 10px; }
-  </style>
+    .card-title .cpc-icon, .btn .cpc-icon, .sub .cpc-icon { vertical-align: -0.18em; }
+  .card-title .cpc-icon { margin-right: 4px; color: #60a5fa; }
+  .badge .cpc-icon { display: block; }
+</style>
 </head>
 <body>
   <header>
-    <span class="badge">⏱️</span>
+    <span class="badge"><i data-icon="wand-sparkles" data-size="18"></i></span>
     <div>
       <h1>Personalize Sendi</h1>
       <small>Modo clean, temas &amp; assistente de IA</small>
@@ -147,20 +150,13 @@
 
     <!-- Geral -->
     <section class="card">
-      <div class="card-title">⚙️ Geral</div>
+      <div class="card-title"><i data-icon="settings"></i> Geral</div>
       <div class="row">
         <div class="row-text">
           <div class="label">Modo clean</div>
           <div class="sub">Esconde menus e deixa só atendimentos + conversa (telas pequenas). Também há um botão na tela.</div>
         </div>
         <label class="switch"><input type="checkbox" id="cleanMode" /><span class="slider"></span></label>
-      </div>
-      <div class="row">
-        <div class="row-text">
-          <div class="label">Ampliar foto do contato</div>
-          <div class="sub">Clique no círculo da foto, no cabeçalho da conversa. O Sendi guarda só 96×96 px; a ampliação é suavizada, sem ganhar detalhe real.</div>
-        </div>
-        <label class="switch"><input type="checkbox" id="avatarZoom" /><span class="slider"></span></label>
       </div>
       <div class="row">
         <div class="row-text">
@@ -173,7 +169,7 @@
 
     <!-- Tema -->
     <section class="card">
-      <div class="card-title">🎨 Tema personalizado</div>
+      <div class="card-title"><i data-icon="palette"></i> Tema personalizado</div>
 
       <div class="row">
         <div class="row-text">
@@ -285,7 +281,7 @@
 
     <!-- Assistente de IA -->
     <section class="card">
-      <div class="card-title">🤖 Assistente de IA</div>
+      <div class="card-title"><i data-icon="bot"></i> Assistente de IA</div>
       <div class="sub" style="margin:-4px 0 12px">Reescrita, sugestão e motivo (via Worker).</div>
 
       <div class="field">
@@ -321,16 +317,16 @@
           </div>
         </div>
         <div class="btn-row" id="reasonActionRow">
-          <button type="button" class="btn" id="reasonCopy" data-v="copy">📋 Copiar</button>
-          <button type="button" class="btn" id="reasonFinish" data-v="finalize">✔️ Finalizar</button>
+          <button type="button" class="btn" id="reasonCopy" data-v="copy"><i data-icon="copy" data-size="14"></i> Copiar</button>
+          <button type="button" class="btn" id="reasonFinish" data-v="finalize"><i data-icon="check" data-size="14"></i> Finalizar</button>
         </div>
-        <div class="sub" style="margin-top:8px; color:#64748b">⚠️ “Finalizar” encerra o atendimento de verdade (irreversível).</div>
+        <div class="sub" style="margin-top:8px; color:#64748b"><i data-icon="triangle-alert" data-size="14"></i> “Finalizar” encerra o atendimento de verdade (irreversível).</div>
       </div>
     </section>
 
     <!-- Link do cliente -->
     <section class="card">
-      <div class="card-title">🔗 Link do cliente</div>
+      <div class="card-title"><i data-icon="link"></i> Link do cliente</div>
 
       <div class="row">
         <div class="row-text">
@@ -350,7 +346,7 @@
 
     <!-- Balões flutuantes -->
     <section class="card">
-      <div class="card-title">🫧 Botões da extensão</div>
+      <div class="card-title"><i data-icon="mouse-pointer-click"></i> Botões da extensão</div>
 
       <div class="row">
         <div class="row-text">
@@ -371,22 +367,23 @@
 
     <!-- Backup -->
     <section class="card">
-      <div class="card-title">💾 Backup</div>
+      <div class="card-title"><i data-icon="database"></i> Backup</div>
       <div class="sub" style="margin:-4px 0 10px">Salva ou restaura todas as configurações.</div>
 
       <div class="btn-row">
-        <button type="button" class="btn" id="exportBtn">⬇️ Exportar</button>
-        <button type="button" class="btn" id="importBtn">⬆️ Importar</button>
+        <button type="button" class="btn" id="exportBtn"><i data-icon="download" data-size="14"></i> Exportar</button>
+        <button type="button" class="btn" id="importBtn"><i data-icon="upload" data-size="14"></i> Importar</button>
       </div>
       <input type="file" id="importFile" accept="application/json" hidden />
       <div class="sub" id="backupStatus" style="margin-top:8px; min-height:14px"></div>
-      <div class="sub" style="margin-top:4px; color:#64748b">⚠️ O arquivo inclui o token da IA. Guarde com cuidado.</div>
+      <div class="sub" style="margin-top:4px; color:#64748b"><i data-icon="triangle-alert" data-size="14"></i> O arquivo inclui o token da IA. Guarde com cuidado.</div>
     </section>
 
   </div>
 
   <footer><small>Alterações aplicam ao recarregar o Sendi.</small></footer>
 
+  <script src="../src/icons.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

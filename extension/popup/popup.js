@@ -1,3 +1,4 @@
+window.CPC_hydrateIcons();
 // Lê e grava preferências em chrome.storage.local.
 const DEFAULTS = {
   themeEnabled: false,
@@ -53,7 +54,6 @@ const els = {
   reasonCopy: document.getElementById('reasonCopy'),
   reasonFinish: document.getElementById('reasonFinish'),
   cleanMode: document.getElementById('cleanMode'),
-  avatarZoom: document.getElementById('avatarZoom'),
   clientLink: document.getElementById('clientLink'),
   clientLinkDomain: document.getElementById('clientLinkDomain'),
   dockColor: document.getElementById('dockColor'),
@@ -116,7 +116,6 @@ async function load() {
   els.aiReason.checked = prefs.aiReason !== false;
   reasonAction = prefs.reasonAction === 'finalize' ? 'finalize' : 'copy';
   els.cleanMode.checked = !!prefs.cleanMode;
-  els.avatarZoom.checked = prefs.avatarZoom !== false;
   els.clientLink.checked = prefs.clientLink !== false;
   els.clientLinkDomain.value = prefs.clientLinkDomain || '';
   dockManual = !!prefs.dockColor;
@@ -147,7 +146,6 @@ async function save() {
     aiReason: els.aiReason.checked,
     reasonAction,
     cleanMode: els.cleanMode.checked,
-    avatarZoom: els.avatarZoom.checked,
     clientLink: els.clientLink.checked,
     clientLinkDomain: els.clientLinkDomain.value.trim(),
     dockColor: dockManual ? els.dockColor.value : '',
@@ -157,7 +155,7 @@ async function save() {
 }
 
 ['themeEnabled', 'bgImage', 'logoImage', 'logoRound', 'accent', 'overlay', 'glassMode', 'glassOpacity', 'glassBlur', 'autoColors',
- 'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink', 'clientLinkDomain', 'cleanMode', 'avatarZoom'].forEach((k) => {
+ 'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink', 'clientLinkDomain', 'cleanMode'].forEach((k) => {
   els[k].addEventListener('change', save);
   els[k].addEventListener('input', save);
 });
