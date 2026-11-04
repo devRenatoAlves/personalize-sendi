@@ -107,7 +107,7 @@ window.CPC_Theme = (function () {
     const vars = {
       '--background': hexOf(side), '--card': hexOf(side), '--popover': hexOf(side),
       '--sidebar': sideDeep, '--sidebar-background': sideDeep,
-      '--foreground': fg, '--card-foreground': fg, '--popover-foreground': fg,
+      '--foreground': fg, '--accent-foreground': fg, '--secondary-foreground': fg, '--card-foreground': fg, '--popover-foreground': fg,
       '--sidebar-foreground': fg, '--muted-foreground': fgMuted,
       '--muted': input, '--secondary': input, '--accent': input, '--sidebar-accent': input,
       '--input': border, '--border': border, '--sidebar-border': border,
@@ -115,6 +115,9 @@ window.CPC_Theme = (function () {
       '--sidebar-primary': hexOf(head), '--sidebar-primary-foreground': onPrimary,
       '--primary-soft': primarySoft, '--primary-soft-foreground': dark ? '#ffffff' : hexOf(head),
     };
+    // Componentes do app com variantes `dark:` (ex.: avisos verdes) só ficam legíveis se o
+    // <html> tiver a classe .dark. Ligamos conforme a paleta e devolvemos o estado original ao sair.
+    syncDarkClass(dark);
     const decl = Object.entries(vars).map(([k, v]) => `${k}: ${v} !important;`).join(' ');
     const S = window.CPC_SELECTORS;
     styleTag(COLOR_ID).textContent = `
@@ -123,7 +126,21 @@ window.CPC_Theme = (function () {
       ${S.message}.justify-end > div[class*="rounded-xl"] { background-color: ${colorCss.bubbleOut} !important; color: ${onBubble(bo)} !important; }`;
   }
 
+  // Guarda se o app já estava em .dark antes de mexermos, para restaurar ao desligar o tema.
+  function syncDarkClass(wantDark) {
+    const root = document.documentElement;
+    if (root.dataset.cpcDarkOrig === undefined) root.dataset.cpcDarkOrig = root.classList.contains('dark') ? '1' : '0';
+    root.classList.toggle('dark', wantDark);
+  }
+  function restoreDarkClass() {
+    const root = document.documentElement;
+    if (root.dataset.cpcDarkOrig === undefined) return;
+    root.classList.toggle('dark', root.dataset.cpcDarkOrig === '1');
+    delete root.dataset.cpcDarkOrig;
+  }
+
   function clearColors() {
+    restoreDarkClass();
     const s = document.getElementById(COLOR_ID);
     if (s) s.textContent = '';
     colorCss = null;
@@ -183,9 +200,6 @@ window.CPC_Theme = (function () {
     if (s) s.textContent = '';
   }
 
-  const startObserver = () => {};
-  const stopObserver = () => {};
-
   async function apply() {
     const prefs = await window.CPC_store.getPrefs();
     const root = document.documentElement;
@@ -216,7 +230,6 @@ window.CPC_Theme = (function () {
     if (current.enabled && current.logoImage) applyLogo();
     else clearLogo();
 
-    root.classList.toggle('cpc-theme-on', current.enabled);
     if (current.enabled && current.bgImage) {
       root.style.setProperty('--cpc-bg-image', `url("${cssUrl(current.bgImage)}")`);
     } else {
@@ -228,36 +241,37 @@ window.CPC_Theme = (function () {
       root.style.removeProperty('--cpc-accent');
     }
 
-    if (current.enabled && current.bgImage) {
-      applyChatBg();
-      startObserver();
+    // Paleta manual (popup) funciona sozinha, com ou sem imagem. Sem paleta manual,
+    // as cores vêm da imagem de fundo (se "cores automáticas" estiver ligado).
+    const manual = paletteFromColors(current.paletteHeader, current.paletteSide,
+      current.paletteBubbleOut, current.paletteBubbleIn);
 
-      // Cores automáticas: cor manual do popup sobrescreve a extração da imagem.
-      if (current.autoColors) {
-        const manual = paletteFromColors(current.paletteHeader, current.paletteSide,
-          current.paletteBubbleOut, current.paletteBubbleIn);
-        if (manual) {
-          colorCss = manual;
-          lastColorUrl = null; // próxima extração de imagem não reusa cache da cor manual
-          applyColors();
-        } else if (lastColorUrl === current.bgImage && colorCss) {
-          applyColors();
-        } else {
-          const url = current.bgImage;
-          extractColors(url).then((cols) => {
-            if (!cols || current.bgImage !== url || !current.autoColors ||
-                current.paletteHeader || current.paletteSide) return;
-            colorCss = cols;
-            lastColorUrl = url;
-            applyColors();
-          });
-        }
+    if (!current.enabled) {
+      clearChatBg();
+      clearColors();
+      return;
+    }
+
+    if (current.bgImage) applyChatBg(); else clearChatBg();
+
+    if (manual) {
+      colorCss = manual;
+      lastColorUrl = null; // próxima extração de imagem não reusa cache da cor manual
+      applyColors();
+    } else if (current.bgImage && current.autoColors) {
+      if (lastColorUrl === current.bgImage && colorCss) {
+        applyColors();
       } else {
-        clearColors();
+        const url = current.bgImage;
+        extractColors(url).then((cols) => {
+          if (!cols || current.bgImage !== url || !current.autoColors ||
+              current.paletteHeader || current.paletteSide) return;
+          colorCss = cols;
+          lastColorUrl = url;
+          applyColors();
+        });
       }
     } else {
-      stopObserver();
-      clearChatBg();
       clearColors();
     }
   }

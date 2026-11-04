@@ -70,12 +70,22 @@ window.CPC_AI = (function () {
   // --- UI: dock flutuante + popup de resultado + toast ---
   // Dock compartilhado (direita): todas as ações por conversa, balões só-ícone empilhados.
   // clientlink.js reusa via window.CPC_dock(). Criado sob demanda.
+  // O dock mora na barra de botões da resposta (ao lado de "Agendar"); sem a barra
+  // (ex.: nenhuma conversa aberta) cai para um bloco flutuante. Reposicionado a cada refresh
+  // porque o Vue recria a barra ao trocar de conversa.
   function dock() {
     let d = document.getElementById('cpc-dock');
     if (!d) {
       d = document.createElement('div');
       d.id = 'cpc-dock';
-      document.body.appendChild(d);
+    }
+    const bar = document.querySelector(S.composerBar);
+    if (bar) {
+      if (d.parentElement !== bar) bar.insertBefore(d, bar.lastElementChild);
+      d.classList.add('cpc-inline');
+    } else {
+      if (d.parentElement !== document.body) document.body.appendChild(d);
+      d.classList.remove('cpc-inline');
     }
     return d;
   }
@@ -91,6 +101,7 @@ window.CPC_AI = (function () {
 
   function ensureDockButtons() {
     const open = !!composer();
+    if (open) dock();
     DOCK_BTNS.forEach((b) => {
       let el = document.getElementById(b.id);
       if (!(open && b.on())) { if (el) el.remove(); return; }
@@ -101,6 +112,7 @@ window.CPC_AI = (function () {
         el.className = 'cpc-dock-btn';
         el.style.order = String(b.order);
         el.dataset.icon = b.icon;
+        el.title = b.label;
         el.innerHTML = `<span class="cpc-dock-label">${b.label}</span>`;
         el.addEventListener('click', b.click);
         dock().appendChild(el);

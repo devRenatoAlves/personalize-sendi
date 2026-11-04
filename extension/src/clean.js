@@ -19,8 +19,8 @@ window.CPC_Clean = (function () {
       });
       document.body.appendChild(b);
     }
-    b.textContent = on ? '⤢ Sair do modo clean' : '⤡ Modo clean';
-    b.title = on ? 'Voltar à interface completa' : 'Esconde menus e deixa só atendimentos + conversa';
+    b.textContent = on ? '⤢' : '⤡';
+    b.title = on ? 'Sair do modo clean (voltar à interface completa)' : 'Modo clean: esconde menus e deixa só atendimentos + conversa';
     b.classList.toggle('cpc-on', on);
   }
 

@@ -109,7 +109,7 @@ sem módulos ES, a ordem importa):
 - **`theme.js`** — o Sendi usa variáveis CSS (`--background`, `--primary`, `--sidebar-background`…).
   `applyColors()` sobrescreve essas variáveis em `:root`/`.dark` com `!important`, escolhendo
   texto claro/escuro pela luminância da cor `side`. Papéis: `header`→`--primary`; `side`→fundos;
-  tom de superfície derivado→`--muted/--input/--accent`; `bubbleOut/bubbleIn`→balões
+  tom de superfície derivado→`--muted/--input/--accent`; a classe `.dark` do `<html>` é ligada/desligada conforme a luminância (restaurada ao desligar o tema); a paleta manual vale sem imagem de fundo; `bubbleOut/bubbleIn`→balões
   (`[data-message-id].justify-end|start > div[class*="rounded-xl"]`). Papel de parede na área
   de mensagens (`chatBg`); logo em `headerLogo`. Cores automáticas vêm do service worker.
 - **`clean.js`** — modo clean (`html.cpc-clean`, regras em `styles.css`): esconde a barra
@@ -117,7 +117,7 @@ sem módulos ES, a ordem importa):
   Botão flutuante `#cpc-clean-toggle` + switch no popup. Ao esconder a `nav` de filtros é
   preciso forçar `grid-template-columns` do aside, senão a lista cai numa coluna de 16px.
 - **`background.js`** — service worker: baixa a imagem de fundo ignorando CORS e extrai cores.
-- **`ai.js`** — Melhorar/Sugerir/Motivo no dock (`#cpc-dock`). `gather()` lê `[data-message-id]`
+- **`ai.js`** — Melhorar/Sugerir/Motivo no dock (`#cpc-dock`), que vive na barra de botões do composer (`composerBar`) e cai para um bloco flutuante se a barra não existir; `dock()` reposiciona a cada refresh porque o Vue recria a barra. `gather()` lê `[data-message-id]`
   (`justify-end` = equipe, `justify-start` = cliente). Finalizar abre o popover nativo
   (`[data-slot=popover-content]` com `command-input` e `command-item`), filtra digitando e clica
   no item — **irreversível**, pede `confirm()`.
@@ -156,9 +156,7 @@ O modo `reason` usa JSON mode (`responseMimeType` / `response_format`).
   configurações da conta OpenRouter dá para bloquear provedores que treinam com os dados
   enviados (ajuste separado para modelos gratuitos e pagos) — vale conferir ao trocar de modelo.
 
-- **`REASONS`** — lista FIXA de motivos de finalização (no topo de `worker.js`). A IA é
-  forçada a escolher um item exato dessa lista; `validReason()` normaliza/valida o retorno.
-  Para mudar os motivos: editar `REASONS` **e redeployar** o Worker.
+- **`REASONS`** — motivos de finalização vindos da secret `REASONS` (um por linha ou JSON); sem ela vale `DEFAULT_REASONS`. A IA só pode escolher um item exato da lista.
 - **`validReason()` é estrito de propósito** — com `reasonAction: 'finalize'` um casamento
   errado finaliza o atendimento com o motivo errado. `normReason()` normaliza (maiúsculas,
   sem acento, espaços colapsados, pontuação das bordas) e só são aceitos três casos:

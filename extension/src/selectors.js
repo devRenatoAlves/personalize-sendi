@@ -16,6 +16,9 @@ window.CPC_SELECTORS = {
   // Campo de resposta.
   composer: 'footer[data-slot="composer"] textarea',
 
+  // Barra de botões do composer (Emoji, Anexar... Enviar): hospeda os botões da extensão.
+  composerBar: 'footer[data-slot="composer"] form div.border-t',
+
   // Mensagens: cada uma tem data-message-id; recebidas = justify-start, enviadas = justify-end.
   message: '[data-message-id]',
   messageText: 'p.whitespace-pre-wrap',
