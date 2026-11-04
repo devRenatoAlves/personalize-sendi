@@ -112,6 +112,7 @@ sem módulos ES, a ordem importa):
   tom de superfície derivado→`--muted/--input/--accent`; a classe `.dark` do `<html>` é ligada/desligada conforme a luminância (restaurada ao desligar o tema); a paleta manual vale sem imagem de fundo; `bubbleOut/bubbleIn`→balões
   (`[data-message-id].justify-end|start > div[class*="rounded-xl"]`). Papel de parede na área
   de mensagens (`chatBg`); logo em `headerLogo`. Cores automáticas vêm do service worker.
+- **Modo vidro** (`applyGlass()` em `theme.js`, prefs `glassMode/glassOpacity/glassBlur`): papel de parede em `[class~="group/sidebar-wrapper"]` (fundo do app todo), `main` transparente, e `color-mix(var(--background) N%, transparent)` + `backdrop-filter: blur()` nos painéis (sidebar, `main aside`, cabeçalhos, composer, balões, popovers). Quando ligado, o papel de parede NÃO vai na área de mensagens (`applyChatBg`).
 - **`clean.js`** — modo clean (`html.cpc-clean`, regras em `styles.css`): esconde a barra
   lateral e o cabeçalho do app, deixa só a lista de atendimentos (340px) e a conversa.
   Botão flutuante `#cpc-clean-toggle` + switch no popup. Ao esconder a `nav` de filtros é

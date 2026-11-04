@@ -28,6 +28,12 @@ const els = {
   accent: document.getElementById('accent'),
   overlay: document.getElementById('overlay'),
   overlayVal: document.getElementById('overlayVal'),
+  glassMode: document.getElementById('glassMode'),
+  glassOpts: document.getElementById('glassOpts'),
+  glassOpacity: document.getElementById('glassOpacity'),
+  glassOpacityVal: document.getElementById('glassOpacityVal'),
+  glassBlur: document.getElementById('glassBlur'),
+  glassBlurVal: document.getElementById('glassBlurVal'),
   autoColors: document.getElementById('autoColors'),
   paletteHeader: document.getElementById('paletteHeader'),
   paletteSide: document.getElementById('paletteSide'),
@@ -71,6 +77,9 @@ function refreshUI() {
   els.reasonCopy.classList.toggle('active', reasonAction === 'copy');
   els.reasonFinish.classList.toggle('active', reasonAction === 'finalize');
   els.overlayVal.textContent = `${els.overlay.value}%`;
+  els.glassOpacityVal.textContent = `${els.glassOpacity.value}%`;
+  els.glassBlurVal.textContent = `${els.glassBlur.value}px`;
+  els.glassOpts.classList.toggle('disabled', !els.glassMode.checked);
   els.paletteClear.classList.toggle('active', !paletteManual);
   els.paletteSub.textContent = paletteManual
     ? 'Paleta manual — sobrepõe as cores da imagem.'
@@ -88,6 +97,9 @@ async function load() {
   els.bgImage.value = prefs.bgImage || '';
   els.accent.value = prefs.accent || '#2563eb';
   els.overlay.value = Math.round((prefs.overlay ?? 0.4) * 100);
+  els.glassMode.checked = !!prefs.glassMode;
+  els.glassOpacity.value = prefs.glassOpacity ?? 45;
+  els.glassBlur.value = prefs.glassBlur ?? 16;
   els.autoColors.checked = prefs.autoColors !== false;
   paletteManual = !!(prefs.paletteHeader && prefs.paletteSide);
   if (prefs.paletteHeader) els.paletteHeader.value = prefs.paletteHeader;
@@ -116,6 +128,9 @@ async function save() {
     bgImage: els.bgImage.value.trim(),
     accent: els.accent.value,
     overlay: Number(els.overlay.value) / 100,
+    glassMode: els.glassMode.checked,
+    glassOpacity: Number(els.glassOpacity.value),
+    glassBlur: Number(els.glassBlur.value),
     autoColors: els.autoColors.checked,
     paletteHeader: paletteManual ? els.paletteHeader.value : '',
     paletteSide: paletteManual ? els.paletteSide.value : '',
@@ -138,7 +153,7 @@ async function save() {
   refreshUI();
 }
 
-['themeEnabled', 'bgImage', 'logoImage', 'logoRound', 'accent', 'overlay', 'autoColors',
+['themeEnabled', 'bgImage', 'logoImage', 'logoRound', 'accent', 'overlay', 'glassMode', 'glassOpacity', 'glassBlur', 'autoColors',
  'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink', 'clientLinkDomain', 'cleanMode'].forEach((k) => {
   els[k].addEventListener('change', save);
   els[k].addEventListener('input', save);

@@ -12,6 +12,7 @@ Planejamento original: [docs/SDD_Sendi_Companion.md](docs/SDD_Sendi_Companion.md
 com base em atributos estáveis (`data-slot`, `data-message-id`, `aria-label`).
 
 - **Modo clean**: esconde menus/cabeçalho e deixa só a lista de atendimentos + a conversa ocupando o resto (bom para notebook). Liga pelo popup ou pelo botão "Modo clean" no canto inferior esquerdo.
+- **Modo vidro** (liquid glass): o papel de parede cobre a tela toda e os painéis com informação (lista de conversas, cabeçalhos, barra de resposta, balões, menus) ficam translúcidos e desfocados. Opacidade e desfoque ajustáveis no popup. Exige uma imagem de fundo.
 - **Tema**: o Sendi usa variáveis CSS (shadcn). A paleta sobrescreve `--background`, `--primary`,
   `--sidebar-background` etc., e o texto troca entre claro/escuro conforme a cor escolhida.
   Papel de parede na área de mensagens, logo trocável, cores dos balões.
