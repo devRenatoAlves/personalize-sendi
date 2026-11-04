@@ -13,7 +13,7 @@
   --radius: 12px;
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; }
+html, body { margin: 0; overflow: hidden; }
 body {
   width: 380px;
   font: 13px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -56,7 +56,7 @@ body {
 .segmented button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 /* ---------- conteúdo ---------- */
-main { max-height: 520px; overflow-y: auto; overflow-x: hidden; padding: 12px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+main { max-height: 440px; overflow-y: auto; overflow-x: hidden; padding: 12px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 .pane { display: flex; flex-direction: column; gap: 10px; }
 .group {
   background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);

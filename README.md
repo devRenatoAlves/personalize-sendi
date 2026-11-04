@@ -1,10 +1,19 @@
 # Personalize Sendi
 
-Extensão de navegador (Manifest V3) que adiciona recursos ao site de atendimento Sendi:
-cronômetro por atendimento com cores de SLA, tema visual (papel de parede + paleta de cores),
-assistente de IA (Melhorar / Sugerir / Motivo de finalização) e atalho para o sistema do cliente.
+Extensão de navegador (Manifest V3) que adiciona recursos ao site de atendimento Sendi: modo clean
+para telas pequenas, tema visual (papel de parede, modo vidro e paleta de cores), troca do som de
+notificação, assistente de IA (Melhorar / Sugerir / Motivo de finalização) e atalho para o sistema
+do cliente.
 
-Planejamento original: [docs/SDD_Sendi_Companion.md](docs/SDD_Sendi_Companion.md).
+![Modo vidro + modo clean](docs/img/modo-vidro-clean.png)
+
+<p>
+  <img src="docs/img/popup-geral.png" width="250" alt="Aba Geral" />
+  <img src="docs/img/popup-aparencia.png" width="250" alt="Aba Aparência" />
+  <img src="docs/img/popup-som.png" width="250" alt="Aba Som" />
+</p>
+
+> Imagens com dados fictícios. A tela acima usa o **modo clean** (só lista de atendimentos e conversa) e o **modo vidro** sobre um papel de parede.
 
 ## Status
 
