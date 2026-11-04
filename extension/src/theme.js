@@ -190,8 +190,13 @@ window.CPC_Theme = (function () {
       ${S.message}.justify-end > div[class*="rounded-xl"] {
         background-color: color-mix(in srgb, ${bubbleOut} ${Math.min(95, op + 35)}%, transparent) !important; ${glass}
       }
-      [data-slot="popover-content"], [data-slot="dropdown-menu-content"], [role="dialog"] {
+      [data-slot="popover-content"], [data-slot="dropdown-menu-sub-content"], [role="dialog"] {
         background-color: ${tint('--popover', Math.min(95, op + 30))} !important; ${glass}
+      }
+      /* Menu com submenu: backdrop-filter no pai vira "containing block" do submenu (position:fixed)
+         e o overflow do menu o corta. Sem blur aqui, com fundo quase opaco para o texto de trás não vazar. */
+      [data-slot="dropdown-menu-content"] {
+        background-color: ${tint('--popover', 97)} !important;
       }`;
   }
   function clearGlass() {
