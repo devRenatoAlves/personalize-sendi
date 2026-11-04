@@ -24,6 +24,9 @@ jobs:
       - name: Define a tag
         run: echo "TAG=${{ github.event.inputs.tag || github.ref_name }}" >> "$GITHUB_ENV"
 
+      - name: Verifica referências indefinidas (ESLint no-undef)
+        run: npx --yes eslint@9 -c tools/eslint.config.mjs extension
+
       - name: Confere se a tag bate com a versão do manifest
         run: |
           tag="${TAG#v}"

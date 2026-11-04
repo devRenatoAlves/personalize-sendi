@@ -218,7 +218,6 @@ select option { background: var(--panel); color: var(--text); }
   border: 1px solid var(--border); background: var(--panel-2); color: var(--text); border-radius: 9px;
 }
 .icon-btn.solid:hover { border-color: var(--accent); background: rgba(79,124,255,.14); }
-.notice.info { background: rgba(79,124,255,.08); border: 1px solid rgba(79,124,255,.22); color: #b9c8f5; margin-top: 0; }
 .notice b { color: #fff; font-weight: 600; }
 
 .update {
@@ -229,4 +228,3 @@ select option { background: var(--panel); color: var(--text); }
 .update span:first-of-type { flex: 1; }
 .update-cta { padding: 2px 10px; border-radius: 999px; background: #34d399; color: #064e3b; font-size: 11px; }
 .notice span b + b, .notice b { color: #fff; font-weight: 600; }
-.notice.info { line-height: 1.5; }

@@ -157,6 +157,48 @@ window.CPC_Theme = (function () {
     return /^javascript:/i.test(clean) ? '' : clean;
   }
 
+  // Modo vidro (liquid glass): o papel de parede cobre a tela inteira e os painéis com
+  // informação (lista de conversas, cabeçalhos, barra de resposta, balões, menus) ficam
+  // translúcidos com desfoque do fundo. A área das mensagens fica transparente.
+  function applyGlass() {
+    const op = Math.max(10, Math.min(95, current.glassOpacity));
+    const blur = Math.max(0, Math.min(40, current.glassBlur));
+    const dim = Math.max(0, Math.min(1, current.overlay));
+    const S = window.CPC_SELECTORS;
+    const tint = (v, a = op) => `color-mix(in srgb, var(${v}) ${a}%, transparent)`;
+    const glass = `backdrop-filter: blur(${blur}px) saturate(1.5) !important; -webkit-backdrop-filter: blur(${blur}px) saturate(1.5) !important;`;
+    const bubbleOut = colorCss ? colorCss.bubbleOut : 'oklch(0.508 0.118 165.612)';
+    const bubbleIn = colorCss ? colorCss.bubbleIn : null;
+    const wrap = '[class~="group/sidebar-wrapper"]';
+    styleTag(GLASS_ID).textContent = `
+      ${wrap} {
+        background-color: transparent !important;
+        background-image: linear-gradient(rgba(0,0,0,${dim}), rgba(0,0,0,${dim})), url("${cssUrl(current.bgImage)}") !important;
+        background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important;
+      }
+      main.bg-background, main[class~="bg-background"] { background: transparent !important; }
+      ${wrap} .bg-sidebar, ${wrap} > div.peer > div > div {
+        background-color: ${tint('--sidebar-background')} !important; ${glass}
+      }
+      main > header, main aside, ${S.chatHeader}, ${S.chatSection} > div.border-b,
+      footer[data-slot="composer"] {
+        background-color: ${tint('--background')} !important; ${glass}
+      }
+      ${S.message}.justify-start > div[class*="rounded-xl"] {
+        background-color: ${bubbleIn ? `color-mix(in srgb, ${bubbleIn} ${Math.min(95, op + 25)}%, transparent)` : tint('--muted', Math.min(95, op + 25))} !important; ${glass}
+      }
+      ${S.message}.justify-end > div[class*="rounded-xl"] {
+        background-color: color-mix(in srgb, ${bubbleOut} ${Math.min(95, op + 35)}%, transparent) !important; ${glass}
+      }
+      [data-slot="popover-content"], [data-slot="dropdown-menu-content"], [role="dialog"] {
+        background-color: ${tint('--popover', Math.min(95, op + 30))} !important; ${glass}
+      }`;
+  }
+  function clearGlass() {
+    const s = document.getElementById(GLASS_ID);
+    if (s) s.textContent = '';
+  }
+
   // Papel de parede na área de mensagens. O seletor é estável, então vai direto em CSS
   // (sem marcar elementos nem observar o DOM).
   function applyChatBg() {
