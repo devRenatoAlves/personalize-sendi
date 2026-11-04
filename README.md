@@ -13,6 +13,7 @@ com base em atributos estáveis (`data-slot`, `data-message-id`, `aria-label`).
 
 - **Modo clean**: esconde menus/cabeçalho e deixa só a lista de atendimentos + a conversa ocupando o resto (bom para notebook). Liga pelo popup ou pelo botão "Modo clean" no canto inferior esquerdo.
 - **Modo vidro** (liquid glass): o papel de parede cobre a tela toda e os painéis com informação (lista de conversas, cabeçalhos, barra de resposta, balões, menus) ficam translúcidos e desfocados. Opacidade e desfoque ajustáveis no popup. Exige uma imagem de fundo.
+- **Foto do contato ampliada**: clicar no círculo da foto no cabeçalho abre um visualizador (Melhorada / Original / Salvar). O Sendi só guarda a foto em 96×96; a versão melhorada usa reamostragem Lanczos + nitidez leve e não cria detalhe real. As imagens enviadas nas mensagens já abrem em tamanho original pelo próprio Sendi.
 - **Tema**: o Sendi usa variáveis CSS (shadcn). A paleta sobrescreve `--background`, `--primary`,
   `--sidebar-background` etc., e o texto troca entre claro/escuro conforme a cor escolhida.
   Papel de parede na área de mensagens, logo trocável, cores dos balões.

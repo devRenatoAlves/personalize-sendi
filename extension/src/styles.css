@@ -255,3 +255,15 @@ html.cpc-clean footer[data-slot="composer"] > div:not(:first-child) button { hei
 }
 #cpc-dock.cpc-inline .cpc-dock-btn::before { background: transparent; width: auto; height: auto; font-size: 15px; }
 #cpc-dock.cpc-inline .cpc-dock-label { display: none; }
+
+/* Visualizador da foto do contato */
+#cpc-avatar-view { position: fixed; inset: 0; z-index: 2147483500; display: grid; place-items: center; background: rgba(0,0,0,.72); backdrop-filter: blur(6px); }
+#cpc-avatar-view .cpc-av-card { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 92vw; max-height: 94vh; padding: 14px; border-radius: 16px; background: #111827; color: #e5e7eb; font: 13px/1.35 system-ui, sans-serif; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+#cpc-avatar-view .cpc-av-img { width: min(70vh, 80vw, 576px); height: min(70vh, 80vw, 576px); border-radius: 12px; object-fit: contain; background: #000; }
+#cpc-avatar-view .cpc-av-name { font-weight: 600; font-size: 14px; }
+#cpc-avatar-view .cpc-av-bar { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+#cpc-avatar-view .cpc-av-bar button { padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: #1f2937; color: #e5e7eb; font: 600 12px system-ui, sans-serif; cursor: pointer; }
+#cpc-avatar-view .cpc-av-bar button:hover { background: #374151; }
+#cpc-avatar-view .cpc-av-bar button.cpc-active { background: var(--cpc-dock-bg, #2563eb); border-color: transparent; color: #fff; }
+#cpc-avatar-view .cpc-av-note { max-width: 420px; text-align: center; font-size: 11px; color: #94a3b8; }
+[data-conversa-aberta] [data-slot="avatar"]:has(img) { cursor: zoom-in; }

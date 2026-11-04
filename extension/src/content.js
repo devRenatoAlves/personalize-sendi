@@ -22,6 +22,7 @@
     await window.CPC_Clean.apply();
     await window.CPC_AI.init();
     await window.CPC_ClientLink.init();
+    await window.CPC_Avatar.init();
     window.CPC_AI.refresh();
     window.CPC_ClientLink.refresh();
     startObserver();

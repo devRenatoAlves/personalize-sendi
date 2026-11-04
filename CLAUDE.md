@@ -122,6 +122,7 @@ sem módulos ES, a ordem importa):
   (`justify-end` = equipe, `justify-start` = cliente). Finalizar abre o popover nativo
   (`[data-slot=popover-content]` com `command-input` e `command-item`), filtra digitando e clica
   no item — **irreversível**, pede `confirm()`.
+- **`avatar.js`** — visualizador da foto do contato (clique no `headerAvatar`, captura antes do Sendi abrir o painel). A origem é 96×96 (`/chat/conversations/{id}/avatar` ignora parâmetros de tamanho); `enhance()` faz Lanczos-3 6× + máscara de nitidez no canvas.
 - **`clientlink.js`** — botão 🔗: nome do contato `fulano - estabelecimento` →
   `https://<estabelecimento>.<clientLinkDomain>`. Fora do padrão = sem botão.
 - **Cronômetro**: não existe; o Sendi mostra "Em atendimento há…" nos cards.
