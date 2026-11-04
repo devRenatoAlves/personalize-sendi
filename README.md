@@ -15,7 +15,7 @@ com base em atributos estáveis (`data-slot`, `data-message-id`, `aria-label`).
 - **Modo vidro** (liquid glass): o papel de parede cobre a tela toda e os painéis com informação (lista de conversas, cabeçalhos, barra de resposta, balões, menus) ficam translúcidos e desfocados. Opacidade e desfoque ajustáveis no popup. Exige uma imagem de fundo.
 - **Tema**: o Sendi usa variáveis CSS (shadcn). A paleta sobrescreve `--background`, `--primary`,
   `--sidebar-background` etc., e o texto troca entre claro/escuro conforme a cor escolhida.
-  Papel de parede na área de mensagens, logo trocável, cores dos balões.
+  Papel de parede na área de mensagens, paletas prontas ou próprias, cores dos balões.
 - **IA**: Melhorar / Sugerir / Motivo de finalização (copiar ou finalizar pelo popover nativo).
 - **Cronômetro**: removido. O Sendi já mostra "Em atendimento há…" com cor em cada card.
 - **Sistema do cliente**: o botão 🔗 aparece quando o nome do contato é `fulano - estabelecimento` (último trecho = uma palavra `a-z0-9-`) e abre `https://<estabelecimento>.<domínio>`. O domínio é definido no popup (campo "Domínio do sistema"). Nome fora do padrão = sem botão.

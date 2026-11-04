@@ -6,11 +6,10 @@
 window.CPC_Theme = (function () {
   const STYLE_ID = 'cpc-theme-style';
   const COLOR_ID = 'cpc-color-style';
-  const LOGO_ID = 'cpc-logo-style';
   const GLASS_ID = 'cpc-glass-style';
   let observer = null;
   let debounceId = null;
-  let current = { enabled: false, bgImage: '', accent: '', overlay: 0.4, autoColors: true, paletteHeader: '', paletteSide: '', logoImage: '', logoRound: false };
+  let current = { enabled: false, bgImage: '', accent: '', overlay: 0.4, autoColors: true, paletteHeader: '', paletteSide: '' };
   let colorCss = null;      // { header, side } já calculados
   let lastColorUrl = null;  // cache: evita reextrair a mesma imagem
 
@@ -158,72 +157,6 @@ window.CPC_Theme = (function () {
     return /^javascript:/i.test(clean) ? '' : clean;
   }
 
-  // Logo personalizada: esconde o <img> original e pinta a imagem nova como background
-  // da âncora. CSS puro = sobrevive aos re-renders do React sem reaplicar em cada mutação.
-  // O <img> fica com opacity:0 (não display:none) para a âncora manter o tamanho original.
-  function applyLogo() {
-    if (!current.logoImage) return;
-    const sel = window.CPC_SELECTORS.headerLogo;
-    const shape = current.logoRound
-      ? 'border-radius: 50% !important; background-size: cover !important;'
-      : 'background-size: contain !important; background-color: transparent !important;';
-    styleTag(LOGO_ID).textContent = `
-      ${sel} > * { opacity: 0 !important; }
-      ${sel} {
-        background-image: url("${cssUrl(current.logoImage)}") !important;
-        background-position: center !important;
-        background-repeat: no-repeat !important;
-        ${shape}
-      }`;
-  }
-
-  // Modo vidro (liquid glass): o papel de parede cobre a tela inteira e os painéis com
-  // informação (lista de conversas, cabeçalhos, barra de resposta, balões, menus) ficam
-  // translúcidos com desfoque do fundo. A área das mensagens fica transparente.
-  function applyGlass() {
-    const op = Math.max(10, Math.min(95, current.glassOpacity));
-    const blur = Math.max(0, Math.min(40, current.glassBlur));
-    const dim = Math.max(0, Math.min(1, current.overlay));
-    const S = window.CPC_SELECTORS;
-    const tint = (v, a = op) => `color-mix(in srgb, var(${v}) ${a}%, transparent)`;
-    const glass = `backdrop-filter: blur(${blur}px) saturate(1.5) !important; -webkit-backdrop-filter: blur(${blur}px) saturate(1.5) !important;`;
-    const bubbleOut = colorCss ? colorCss.bubbleOut : 'oklch(0.508 0.118 165.612)';
-    const bubbleIn = colorCss ? colorCss.bubbleIn : null;
-    const wrap = '[class~="group/sidebar-wrapper"]';
-    styleTag(GLASS_ID).textContent = `
-      ${wrap} {
-        background-color: transparent !important;
-        background-image: linear-gradient(rgba(0,0,0,${dim}), rgba(0,0,0,${dim})), url("${cssUrl(current.bgImage)}") !important;
-        background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important;
-      }
-      main.bg-background, main[class~="bg-background"] { background: transparent !important; }
-      ${wrap} .bg-sidebar, ${wrap} > div.peer > div > div {
-        background-color: ${tint('--sidebar-background')} !important; ${glass}
-      }
-      main > header, main aside, ${S.chatHeader}, ${S.chatSection} > div.border-b,
-      footer[data-slot="composer"] {
-        background-color: ${tint('--background')} !important; ${glass}
-      }
-      ${S.message}.justify-start > div[class*="rounded-xl"] {
-        background-color: ${bubbleIn ? `color-mix(in srgb, ${bubbleIn} ${Math.min(95, op + 25)}%, transparent)` : tint('--muted', Math.min(95, op + 25))} !important; ${glass}
-      }
-      ${S.message}.justify-end > div[class*="rounded-xl"] {
-        background-color: color-mix(in srgb, ${bubbleOut} ${Math.min(95, op + 35)}%, transparent) !important; ${glass}
-      }
-      [data-slot="popover-content"], [data-slot="dropdown-menu-content"], [role="dialog"] {
-        background-color: ${tint('--popover', Math.min(95, op + 30))} !important; ${glass}
-      }`;
-  }
-  function clearGlass() {
-    const s = document.getElementById(GLASS_ID);
-    if (s) s.textContent = '';
-  }
-
-  function clearLogo() {
-    const s = document.getElementById(LOGO_ID);
-    if (s) s.textContent = '';
-  }
-
   // Papel de parede na área de mensagens. O seletor é estável, então vai direto em CSS
   // (sem marcar elementos nem observar o DOM).
   function applyChatBg() {
@@ -258,8 +191,6 @@ window.CPC_Theme = (function () {
       paletteSide: prefs.paletteSide || '',
       paletteBubbleOut: prefs.paletteBubbleOut || '',
       paletteBubbleIn: prefs.paletteBubbleIn || '',
-      logoImage: prefs.logoImage || '',
-      logoRound: !!prefs.logoRound,
       glass: !!prefs.glassMode,
       glassOpacity: typeof prefs.glassOpacity === 'number' ? prefs.glassOpacity : 45,
       glassBlur: typeof prefs.glassBlur === 'number' ? prefs.glassBlur : 16,
@@ -272,10 +203,6 @@ window.CPC_Theme = (function () {
     } else {
       root.style.removeProperty('--cpc-dock-bg');
     }
-
-    // Logo personalizada: independe do papel de parede, só do tema estar ligado.
-    if (current.enabled && current.logoImage) applyLogo();
-    else clearLogo();
 
     if (current.enabled && current.bgImage) {
       root.style.setProperty('--cpc-bg-image', `url("${cssUrl(current.bgImage)}")`);

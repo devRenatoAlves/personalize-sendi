@@ -8,7 +8,7 @@ window.CPC_store = {
         themeEnabled: false, cleanMode: false, glassMode: false, glassOpacity: 45, glassBlur: 16, bgImage: '', accent: '#2563eb',
         overlay: 0.4, autoColors: true, paletteHeader: '', paletteSide: '',
         paletteBubbleOut: '', paletteBubbleIn: '',
-        logoImage: '', logoRound: false,
+        
         clientLink: true, clientLinkDomain: '', dockColor: '',
         aiUrl: '', aiToken: '', aiImprove: true, aiSuggest: true, aiReason: true,
         reasonAction: 'copy', // 'copy' = copiar texto | 'finalize' = finalizar atendimento

@@ -26,9 +26,6 @@ window.CPC_SELECTORS = {
   // Nome do contato no cabeçalho da conversa ("fulano - estabelecimento").
   contactName: 'header[data-conversa-aberta] button[title^="Ver dados"] p.truncate',
 
-  // Logo do app (canto superior esquerdo da barra lateral).
-  headerLogo: 'a[href="/dashboard"] > div.aspect-square',
-
   // --- Fluxo de finalização (popover nativo de motivos) ---
   popover: '[data-slot="popover-content"]',
   reasonSearchInput: '[data-slot="command-input"]',

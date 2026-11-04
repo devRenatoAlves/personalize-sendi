@@ -112,7 +112,7 @@ sem módulos ES, a ordem importa):
   texto claro/escuro pela luminância da cor `side`. Papéis: `header`→`--primary`; `side`→fundos;
   tom de superfície derivado→`--muted/--input/--accent`; a classe `.dark` do `<html>` é ligada/desligada conforme a luminância (restaurada ao desligar o tema); a paleta manual vale sem imagem de fundo; `bubbleOut/bubbleIn`→balões
   (`[data-message-id].justify-end|start > div[class*="rounded-xl"]`). Papel de parede na área
-  de mensagens (`chatBg`); logo em `headerLogo`. Cores automáticas vêm do service worker.
+  de mensagens (`chatBg`). Cores automáticas vêm do service worker.
 - **Modo vidro** (`applyGlass()` em `theme.js`, prefs `glassMode/glassOpacity/glassBlur`): papel de parede em `[class~="group/sidebar-wrapper"]` (fundo do app todo), `main` transparente, e `color-mix(var(--background) N%, transparent)` + `backdrop-filter: blur()` nos painéis (sidebar, `main aside`, cabeçalhos, composer, balões, popovers). Quando ligado, o papel de parede NÃO vai na área de mensagens (`applyChatBg`).
 - **`clean.js`** — modo clean (`html.cpc-clean`, regras em `styles.css`): esconde a barra
   lateral e o cabeçalho do app, deixa só a lista de atendimentos (340px) e a conversa.
@@ -126,7 +126,7 @@ sem módulos ES, a ordem importa):
 - **`clientlink.js`** — botão 🔗: nome do contato `fulano - estabelecimento` →
   `https://<estabelecimento>.<clientLinkDomain>`. Fora do padrão = sem botão.
 - **Cronômetro**: não existe; o Sendi mostra "Em atendimento há…" nos cards.
-- **`popup/`** — configuração (HTML/JS puro) gravada em `cpc_prefs`.
+- **`popup/`** — configuração (`popup.html` + `popup.css` + `popup.js`, JS puro) gravada em `cpc_prefs`. Quatro abas (Geral, Aparência, IA, Backup), paletas prontas (`PRESETS` em `popup.js`), campo de token com mostrar/ocultar. Toda pref nova entra em `DEFAULTS` do `popup.js` (senão o Importar a descarta) e em `getPrefs()` do `storage.js`.
 
 ### 2. Worker (`worker/src/worker.js`)
 Cloudflare Worker, endpoints `POST /ai` (IA), `GET /models` (diagnóstico: lista os modelos que

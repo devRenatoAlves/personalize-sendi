@@ -2,386 +2,218 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --card-soft: #243144;
-      --border: #334155;
-      --text: #e2e8f0;
-      --muted: #94a3b8;
-      --accent: #2563eb;
-      --accent-2: #7c3aed;
-      --radius: 10px;
-    }
-    * { box-sizing: border-box; }
-    body {
-      width: 320px;
-      margin: 0;
-      font: 13px/1.45 system-ui, -apple-system, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-    }
-
-    /* Header */
-    header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: #fff;
-    }
-    header .badge {
-      width: 34px; height: 34px; flex: none;
-      display: grid; place-items: center;
-      background: rgba(255, 255, 255, .18);
-      border-radius: 9px; font-size: 18px;
-    }
-    header h1 { font-size: 14px; margin: 0; font-weight: 600; }
-    header small { display: block; font-size: 11px; opacity: .85; }
-
-    /* Layout */
-    .body { display: flex; flex-direction: column; gap: 12px; padding: 14px; }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 12px 14px;
-    }
-    .card-title {
-      display: flex; align-items: center; gap: 7px;
-      font-size: 11px; font-weight: 700; letter-spacing: .04em;
-      text-transform: uppercase; color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    /* Rows */
-    .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .row + .row,
-    .field + .row,
-    .row + .field,
-    .field + .field { margin-top: 12px; }
-    .row-text { min-width: 0; }
-    .label { font-weight: 600; }
-    .sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
-
-    /* Text inputs */
-    .field > label { display: block; font-weight: 600; margin-bottom: 6px; }
-    input[type="text"] {
-      width: 100%; padding: 8px 10px; border-radius: 8px;
-      border: 1px solid var(--border); background: var(--bg);
-      color: var(--text); font-size: 12px;
-    }
-    input[type="text"]::placeholder { color: #64748b; }
-    input[type="text"]:focus { outline: none; border-color: var(--accent); }
-    input[type="number"] {
-      width: 56px; padding: 7px 8px; border-radius: 8px; text-align: center;
-      border: 1px solid var(--border); background: var(--bg);
-      color: var(--text); font-size: 12px;
-      -moz-appearance: textfield;
-    }
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-    input[type="number"]:focus { outline: none; border-color: var(--accent); }
-
-    /* Toggle switch */
-    .switch { position: relative; width: 38px; height: 22px; flex: none; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute; inset: 0; cursor: pointer;
-      background: var(--border); border-radius: 22px; transition: .2s;
-    }
-    .slider::before {
-      content: ""; position: absolute; height: 16px; width: 16px;
-      left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s;
-    }
-    .switch input:checked + .slider { background: var(--accent); }
-    .switch input:checked + .slider::before { transform: translateX(16px); }
-
-    /* Range */
-    input[type="range"] { flex: 1; accent-color: var(--accent); }
-    .val {
-      width: 40px; text-align: right; color: var(--muted);
-      font-variant-numeric: tabular-nums;
-    }
-
-    /* Color swatch */
-    input[type="color"] {
-      width: 30px; height: 30px; flex: none; padding: 0; cursor: pointer;
-      border: 1px solid var(--border); border-radius: 8px; background: none;
-    }
-    input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
-    input[type="color"]::-webkit-color-swatch { border: none; border-radius: 6px; }
-
-    /* Small button (Auto) */
-    .btn {
-      flex: none; padding: 5px 12px; border-radius: 7px; cursor: pointer;
-      border: 1px solid var(--border); background: var(--card-soft);
-      color: var(--text); font-size: 11px; font-weight: 600;
-    }
-    .btn:hover { border-color: var(--accent); }
-    .btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-    .btn-row { display: flex; gap: 8px; }
-    .btn-row .btn { flex: 1; padding: 8px; text-align: center; }
-
-    /* Gated sub-options */
-    .gated { transition: opacity .2s; }
-    .gated.disabled { opacity: .4; pointer-events: none; }
-    .divider { height: 1px; background: var(--border); margin: 12px 0; }
-
-    footer { padding: 2px 16px 16px; text-align: center; }
-    footer small { color: var(--muted); font-size: 10px; }
-    .card-title .cpc-icon, .btn .cpc-icon, .sub .cpc-icon { vertical-align: -0.18em; }
-  .card-title .cpc-icon { margin-right: 4px; color: #60a5fa; }
-  .badge .cpc-icon { display: block; }
-</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
-  <header>
-    <span class="badge"><i data-icon="wand-sparkles" data-size="18"></i></span>
-    <div>
+  <header class="top">
+    <span class="logo"><i data-icon="wand-sparkles" data-size="20"></i></span>
+    <div class="top-text">
       <h1>Personalize Sendi</h1>
-      <small>Modo clean, temas &amp; assistente de IA</small>
+      <small>Salvo automaticamente · vale na hora</small>
     </div>
   </header>
 
-  <div class="body">
+  <nav class="tabs" role="tablist" aria-label="Seções">
+    <button class="tab" role="tab" data-tab="geral"><i data-icon="layout-dashboard" data-size="16"></i><span>Geral</span></button>
+    <button class="tab" role="tab" data-tab="aparencia"><i data-icon="palette" data-size="16"></i><span>Aparência</span></button>
+    <button class="tab" role="tab" data-tab="ia"><i data-icon="bot" data-size="16"></i><span>IA</span></button>
+    <button class="tab" role="tab" data-tab="backup"><i data-icon="database" data-size="16"></i><span>Backup</span></button>
+  </nav>
 
-    <!-- Geral -->
-    <section class="card">
-      <div class="card-title"><i data-icon="settings"></i> Geral</div>
-      <div class="row">
-        <div class="row-text">
-          <div class="label">Modo clean</div>
-          <div class="sub">Esconde menus e deixa só atendimentos + conversa (telas pequenas). Também há um botão na tela.</div>
+  <main>
+    <!-- ================= GERAL ================= -->
+    <section class="pane" data-pane="geral">
+      <div class="group">
+        <div class="group-title">Tela</div>
+        <div class="row">
+          <span class="ico"><i data-icon="layout-dashboard" data-size="18"></i></span>
+          <div class="row-text">
+            <div class="label">Modo clean</div>
+            <div class="sub">Esconde menus e deixa só atendimentos e conversa. Bom para telas pequenas.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="cleanMode" /><span class="slider"></span></label>
         </div>
-        <label class="switch"><input type="checkbox" id="cleanMode" /><span class="slider"></span></label>
       </div>
-      <div class="row">
-        <div class="row-text">
-          <div class="label">Cor de destaque</div>
-          <div class="sub">Cor-base dos botões da extensão (IA e link).</div>
+
+      <div class="group">
+        <div class="group-title">Atalho para o sistema do cliente</div>
+        <div class="row">
+          <span class="ico"><i data-icon="external-link" data-size="18"></i></span>
+          <div class="row-text">
+            <div class="label">Botão “Sistema do cliente”</div>
+            <div class="sub">Aparece quando o contato se chama <b>fulano - estabelecimento</b>.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="clientLink" /><span class="slider"></span></label>
         </div>
-        <input type="color" id="accent" value="#2563eb" />
+        <div class="field" id="clientLinkOpts">
+          <label for="clientLinkDomain">Domínio do sistema</label>
+          <input type="text" id="clientLinkDomain" placeholder="exemplo.com.br" spellcheck="false" />
+          <div class="hint">Link gerado: <code>https://estabelecimento.<span id="domainPreview">exemplo.com.br</span></code></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-title">Botões da extensão</div>
+        <div class="row">
+          <span class="ico"><i data-icon="mouse-pointer-click" data-size="18"></i></span>
+          <div class="row-text">
+            <div class="label">Cor dos botões</div>
+            <div class="sub" id="dockColorSub">Usando o degradê padrão.</div>
+          </div>
+          <input type="color" id="dockColor" value="#2563eb" aria-label="Cor dos botões" />
+          <button type="button" class="chip" id="dockColorAuto" title="Voltar ao degradê padrão">Auto</button>
+        </div>
       </div>
     </section>
 
-    <!-- Tema -->
-    <section class="card">
-      <div class="card-title"><i data-icon="palette"></i> Tema personalizado</div>
-
-      <div class="row">
-        <div class="row-text">
-          <div class="label">Ativar tema</div>
-          <div class="sub">Papel de parede na área do chat.</div>
+    <!-- ================= APARÊNCIA ================= -->
+    <section class="pane" data-pane="aparencia" hidden>
+      <div class="group">
+        <div class="row">
+          <span class="ico"><i data-icon="palette" data-size="18"></i></span>
+          <div class="row-text">
+            <div class="label">Ativar tema personalizado</div>
+            <div class="sub">Liga papel de parede, vidro e cores.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="themeEnabled" /><span class="slider"></span></label>
         </div>
-        <label class="switch"><input type="checkbox" id="themeEnabled" /><span class="slider"></span></label>
       </div>
 
       <div class="gated" id="themeOpts">
-        <div class="divider"></div>
-
-        <div class="field">
-          <label for="bgImage">Imagem de fundo</label>
-          <input type="text" id="bgImage" placeholder="https://…/imagem.jpg" />
-        </div>
-
-        <div class="field">
-          <label for="logoImage">Logo da empresa</label>
-          <input type="text" id="logoImage" placeholder="https://…/logo.png" />
-          <div class="sub" style="margin-top:6px">Substitui a logo do header. Vazio = padrão.</div>
-        </div>
-
-        <div class="row">
-          <div class="row-text">
-            <div class="label">Logo redonda</div>
-            <div class="sub">Recorta em círculo. Desligado = retangular.</div>
+        <div class="group">
+          <div class="group-title">Papel de parede</div>
+          <div class="field">
+            <label for="bgImage">Endereço da imagem</label>
+            <input type="text" id="bgImage" placeholder="https://…/imagem.jpg" spellcheck="false" />
           </div>
-          <label class="switch"><input type="checkbox" id="logoRound" /><span class="slider"></span></label>
-        </div>
-
-        <div class="row">
-          <div class="row-text"><div class="label">Escurecer fundo</div></div>
-          <input type="range" id="overlay" min="0" max="90" step="5" />
-          <span class="val" id="overlayVal">40%</span>
-        </div>
-
-        <div class="row">
-          <div class="row-text">
-            <div class="label">Modo vidro</div>
-            <div class="sub">Papel de parede na tela toda; listas, cabeçalhos, balões e menus ficam translúcidos e desfocados.</div>
+          <div class="slider-row">
+            <span class="label">Escurecer</span>
+            <input type="range" id="overlay" min="0" max="90" step="5" />
+            <span class="val" id="overlayVal">40%</span>
           </div>
-          <label class="switch"><input type="checkbox" id="glassMode" /><span class="slider"></span></label>
         </div>
-        <div class="gated" id="glassOpts">
+
+        <div class="group">
+          <div class="group-title">Vidro</div>
           <div class="row">
-            <div class="row-text"><div class="label">Opacidade do vidro</div></div>
-            <input type="range" id="glassOpacity" min="10" max="90" step="5" />
-            <span class="val" id="glassOpacityVal">45%</span>
+            <span class="ico"><i data-icon="droplets" data-size="18"></i></span>
+            <div class="row-text">
+              <div class="label">Modo vidro</div>
+              <div class="sub">Papel de parede na tela toda; listas, cabeçalhos e balões ficam translúcidos e desfocados.</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="glassMode" /><span class="slider"></span></label>
           </div>
-          <div class="row">
-            <div class="row-text"><div class="label">Desfoque</div></div>
-            <input type="range" id="glassBlur" min="0" max="40" step="2" />
-            <span class="val" id="glassBlurVal">16px</span>
+          <div class="gated" id="glassOpts">
+            <div class="slider-row">
+              <span class="label">Opacidade</span>
+              <input type="range" id="glassOpacity" min="10" max="90" step="5" />
+              <span class="val" id="glassOpacityVal">45%</span>
+            </div>
+            <div class="slider-row">
+              <span class="label">Desfoque</span>
+              <input type="range" id="glassBlur" min="0" max="40" step="2" />
+              <span class="val" id="glassBlurVal">16px</span>
+            </div>
           </div>
         </div>
 
-        <div class="divider"></div>
-
-        <div class="row">
-          <div class="row-text">
-            <div class="label">Paleta de cores</div>
-            <div class="sub" id="paletteSub">Usando as cores da imagem.</div>
+        <div class="group">
+          <div class="group-title-row">
+            <div class="group-title">Cores</div>
+            <button type="button" class="chip" id="paletteClear" title="Usar as cores da imagem de fundo">
+              <i data-icon="rotate-ccw" data-size="12"></i> Auto
+            </button>
           </div>
-          <button type="button" class="btn" id="paletteClear">Auto</button>
-        </div>
+          <div class="sub" id="paletteSub">Usando as cores da imagem de fundo.</div>
 
-        <div class="row">
-          <div class="row-text">
-            <div class="label">Header e botões</div>
-            <div class="sub">Header e botões.</div>
-          </div>
-          <input type="color" id="paletteHeader" value="#2563eb" />
-        </div>
+          <div class="presets" id="presets" aria-label="Paletas prontas"></div>
 
-        <div class="row">
-          <div class="row-text">
-            <div class="label">Restante</div>
-            <div class="sub">Lista, busca, rodapé e inputs.</div>
+          <div class="swatches">
+            <label class="swatch"><input type="color" id="paletteHeader" value="#2563eb" /><span>Destaque</span><small>botões e itens ativos</small></label>
+            <label class="swatch"><input type="color" id="paletteSide" value="#1e293b" /><span>Fundo</span><small>painéis e listas</small></label>
+            <label class="swatch"><input type="color" id="paletteBubbleOut" value="#2563eb" /><span>Balão enviado</span><small>suas mensagens</small></label>
+            <label class="swatch"><input type="color" id="paletteBubbleIn" value="#1e293b" /><span>Balão recebido</span><small>mensagens do cliente</small></label>
           </div>
-          <input type="color" id="paletteSide" value="#1e293b" />
-        </div>
 
-        <div class="row">
-          <div class="row-text">
-            <div class="label">Balão enviado</div>
-            <div class="sub">Mensagens que você envia.</div>
+          <div class="row compact">
+            <div class="row-text">
+              <div class="label">Cores automáticas da imagem</div>
+              <div class="sub">Usadas quando não há paleta própria.</div>
+            </div>
+            <label class="switch"><input type="checkbox" id="autoColors" /><span class="slider"></span></label>
           </div>
-          <input type="color" id="paletteBubbleOut" value="#2563eb" />
-        </div>
-
-        <div class="row">
-          <div class="row-text">
-            <div class="label">Balão recebido</div>
-            <div class="sub">Mensagens do cliente.</div>
-          </div>
-          <input type="color" id="paletteBubbleIn" value="#1e293b" />
-        </div>
-
-        <div class="row">
-          <div class="row-text">
-            <div class="label">Cores automáticas</div>
-            <div class="sub">Tinta header e lista com as cores da imagem.</div>
-          </div>
-          <label class="switch"><input type="checkbox" id="autoColors" /><span class="slider"></span></label>
         </div>
       </div>
     </section>
 
-    <!-- Assistente de IA -->
-    <section class="card">
-      <div class="card-title"><i data-icon="bot"></i> Assistente de IA</div>
-      <div class="sub" style="margin:-4px 0 12px">Reescrita, sugestão e motivo (via Worker).</div>
-
-      <div class="field">
-        <label for="aiUrl">URL do Worker</label>
-        <input type="text" id="aiUrl" placeholder="https://….workers.dev/ai" />
-      </div>
-
-      <div class="field">
-        <label for="aiToken">Token</label>
-        <input type="text" id="aiToken" placeholder="SHARED_TOKEN" />
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="row">
-        <div class="row-text"><div class="label">Botão “Melhorar”</div></div>
-        <label class="switch"><input type="checkbox" id="aiImprove" /><span class="slider"></span></label>
-      </div>
-      <div class="row">
-        <div class="row-text"><div class="label">Sugerir resposta</div></div>
-        <label class="switch"><input type="checkbox" id="aiSuggest" /><span class="slider"></span></label>
-      </div>
-      <div class="row">
-        <div class="row-text"><div class="label">Motivo de finalização</div></div>
-        <label class="switch"><input type="checkbox" id="aiReason" /><span class="slider"></span></label>
-      </div>
-
-      <div class="gated" id="reasonOpts">
-        <div class="row">
-          <div class="row-text">
-            <div class="label">Ação ao clicar no motivo</div>
-            <div class="sub">Copiar o texto ou finalizar o atendimento.</div>
+    <!-- ================= IA ================= -->
+    <section class="pane" data-pane="ia" hidden>
+      <div class="group">
+        <div class="group-title">Conexão</div>
+        <div class="field">
+          <label for="aiUrl">Endereço do Worker</label>
+          <input type="text" id="aiUrl" placeholder="https://….workers.dev/ai" spellcheck="false" />
+        </div>
+        <div class="field">
+          <label for="aiToken">Token de acesso</label>
+          <div class="input-wrap">
+            <input type="password" id="aiToken" placeholder="SHARED_TOKEN" spellcheck="false" autocomplete="off" />
+            <button type="button" class="icon-btn" id="tokenToggle" aria-label="Mostrar token" title="Mostrar/ocultar"><i data-icon="eye" data-size="16"></i></button>
           </div>
         </div>
-        <div class="btn-row" id="reasonActionRow">
-          <button type="button" class="btn" id="reasonCopy" data-v="copy"><i data-icon="copy" data-size="14"></i> Copiar</button>
-          <button type="button" class="btn" id="reasonFinish" data-v="finalize"><i data-icon="check" data-size="14"></i> Finalizar</button>
+      </div>
+
+      <div class="group">
+        <div class="group-title">Botões na barra de resposta</div>
+        <div class="row">
+          <span class="ico"><i data-icon="wand-sparkles" data-size="18"></i></span>
+          <div class="row-text"><div class="label">Melhorar</div><div class="sub">Reescreve o seu rascunho.</div></div>
+          <label class="switch"><input type="checkbox" id="aiImprove" /><span class="slider"></span></label>
         </div>
-        <div class="sub" style="margin-top:8px; color:#64748b"><i data-icon="triangle-alert" data-size="14"></i> “Finalizar” encerra o atendimento de verdade (irreversível).</div>
+        <div class="row">
+          <span class="ico"><i data-icon="lightbulb" data-size="18"></i></span>
+          <div class="row-text"><div class="label">Sugerir</div><div class="sub">Sugere a próxima resposta.</div></div>
+          <label class="switch"><input type="checkbox" id="aiSuggest" /><span class="slider"></span></label>
+        </div>
+        <div class="row">
+          <span class="ico"><i data-icon="clipboard-list" data-size="18"></i></span>
+          <div class="row-text"><div class="label">Motivo de finalização</div><div class="sub">Indica o motivo certo da lista.</div></div>
+          <label class="switch"><input type="checkbox" id="aiReason" /><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="group gated" id="reasonOpts">
+        <div class="group-title">Ao clicar num motivo</div>
+        <div class="segmented" id="reasonActionRow" role="radiogroup" aria-label="Ação ao clicar no motivo">
+          <button type="button" id="reasonCopy" data-v="copy" role="radio"><i data-icon="copy" data-size="14"></i> Copiar texto</button>
+          <button type="button" id="reasonFinish" data-v="finalize" role="radio"><i data-icon="check" data-size="14"></i> Finalizar</button>
+        </div>
+        <div class="notice warn" id="finalizeWarn">
+          <i data-icon="triangle-alert" data-size="14"></i>
+          <span>“Finalizar” encerra o atendimento de verdade e não dá para desfazer. Você sempre confirma antes.</span>
+        </div>
       </div>
     </section>
 
-    <!-- Link do cliente -->
-    <section class="card">
-      <div class="card-title"><i data-icon="link"></i> Link do cliente</div>
-
-      <div class="row">
-        <div class="row-text">
-          <div class="label">Botão flutuante</div>
-          <div class="sub">Abre o sistema do cliente em nova guia. Só aparece se o nome do contato for “fulano - estabelecimento”.</div>
+    <!-- ================= BACKUP ================= -->
+    <section class="pane" data-pane="backup" hidden>
+      <div class="group">
+        <div class="group-title">Configurações</div>
+        <div class="sub" style="margin-bottom:10px">Salve num arquivo para usar em outro computador ou restaurar depois.</div>
+        <div class="btn-row">
+          <button type="button" class="btn" id="exportBtn"><i data-icon="download" data-size="15"></i> Exportar</button>
+          <button type="button" class="btn" id="importBtn"><i data-icon="upload" data-size="15"></i> Importar</button>
         </div>
-        <label class="switch"><input type="checkbox" id="clientLink" /><span class="slider"></span></label>
-      </div>
-      <div class="row">
-        <div class="row-text">
-          <div class="label">Domínio do sistema</div>
-          <div class="sub">Link = estabelecimento + este domínio.</div>
+        <input type="file" id="importFile" accept="application/json" hidden />
+        <div class="status" id="backupStatus" role="status"></div>
+        <div class="notice warn">
+          <i data-icon="shield-check" data-size="14"></i>
+          <span>O arquivo inclui o token da IA. Guarde com cuidado e não publique.</span>
         </div>
-        <input type="text" id="clientLinkDomain" placeholder="exemplo.com.br" />
       </div>
     </section>
-
-    <!-- Balões flutuantes -->
-    <section class="card">
-      <div class="card-title"><i data-icon="mouse-pointer-click"></i> Botões da extensão</div>
-
-      <div class="row">
-        <div class="row-text">
-          <div class="label">Cor dos botões</div>
-          <div class="sub" id="dockColorSub">Cor padrão (degradê).</div>
-        </div>
-        <button type="button" class="btn" id="dockColorAuto">Auto</button>
-      </div>
-
-      <div class="row">
-        <div class="row-text">
-          <div class="label">Cor personalizada</div>
-          <div class="sub">Motivo, Sugerir, Melhorar e Link (na barra de resposta).</div>
-        </div>
-        <input type="color" id="dockColor" value="#2563eb" />
-      </div>
-    </section>
-
-    <!-- Backup -->
-    <section class="card">
-      <div class="card-title"><i data-icon="database"></i> Backup</div>
-      <div class="sub" style="margin:-4px 0 10px">Salva ou restaura todas as configurações.</div>
-
-      <div class="btn-row">
-        <button type="button" class="btn" id="exportBtn"><i data-icon="download" data-size="14"></i> Exportar</button>
-        <button type="button" class="btn" id="importBtn"><i data-icon="upload" data-size="14"></i> Importar</button>
-      </div>
-      <input type="file" id="importFile" accept="application/json" hidden />
-      <div class="sub" id="backupStatus" style="margin-top:8px; min-height:14px"></div>
-      <div class="sub" style="margin-top:4px; color:#64748b"><i data-icon="triangle-alert" data-size="14"></i> O arquivo inclui o token da IA. Guarde com cuidado.</div>
-    </section>
-
-  </div>
-
-  <footer><small>Alterações aplicam ao recarregar o Sendi.</small></footer>
+  </main>
 
   <script src="../src/icons.js"></script>
   <script src="popup.js"></script>
