@@ -5,7 +5,7 @@ window.CPC_store = {
     const { cpc_prefs } = await chrome.storage.local.get('cpc_prefs');
     return Object.assign(
       {
-        themeEnabled: false, bgImage: '', accent: '#2563eb',
+        themeEnabled: false, cleanMode: false, bgImage: '', accent: '#2563eb',
         overlay: 0.4, autoColors: true, paletteHeader: '', paletteSide: '',
         paletteBubbleOut: '', paletteBubbleIn: '',
         logoImage: '', logoRound: false,

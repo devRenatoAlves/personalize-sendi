@@ -243,3 +243,22 @@
   margin-right: 3px;
   opacity: 1;
 }
+
+/* ===== Modo clean (html.cpc-clean): só lista de atendimentos + conversa ===== */
+html.cpc-clean [class~="group/sidebar-wrapper"] > div.peer { display: none !important; }
+html.cpc-clean main > header { display: none !important; }
+html.cpc-clean main { margin: 0 !important; border-radius: 0 !important; }
+html.cpc-clean main aside > nav[aria-label="Filtros de conversas"] { display: none !important; }
+/* Sem a nav, a grade de 2 colunas (xl) empurraria a lista para uma coluna de 16px. */
+html.cpc-clean main aside {
+  grid-template-columns: minmax(0, 1fr) !important;
+  width: 340px !important; max-width: 340px !important; flex: 0 0 340px !important;
+}
+
+#cpc-clean-toggle {
+  position: fixed; left: 10px; bottom: 10px; z-index: 2147483000;
+  padding: 5px 11px; border-radius: 999px; border: 1px solid rgba(127,127,127,.35);
+  background: var(--cpc-dock-bg, #1e293b); color: #fff; font: 600 12px/1.2 system-ui, sans-serif;
+  cursor: pointer; opacity: .55; transition: opacity .15s;
+}
+#cpc-clean-toggle:hover, #cpc-clean-toggle.cpc-on { opacity: 1; }

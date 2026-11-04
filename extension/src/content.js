@@ -6,6 +6,7 @@
     clearTimeout(debounceId);
     debounceId = setTimeout(() => {
       window.CPC_AI.refresh();
+      window.CPC_Clean.refresh();
       window.CPC_ClientLink.refresh();
     }, 200);
   }
@@ -18,6 +19,7 @@
 
   async function init() {
     await window.CPC_Theme.apply();
+    await window.CPC_Clean.apply();
     await window.CPC_AI.init();
     await window.CPC_ClientLink.init();
     window.CPC_AI.refresh();
@@ -27,7 +29,7 @@
 
   // Reage a mudanças de preferências feitas no popup.
   chrome.storage.onChanged.addListener((changes) => {
-    if (changes.cpc_prefs) window.CPC_Theme.apply();
+    if (changes.cpc_prefs) { window.CPC_Theme.apply(); window.CPC_Clean.apply(); }
   });
 
   if (document.readyState === 'loading') {

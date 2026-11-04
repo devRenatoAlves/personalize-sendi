@@ -46,6 +46,7 @@ const els = {
   reasonOpts: document.getElementById('reasonOpts'),
   reasonCopy: document.getElementById('reasonCopy'),
   reasonFinish: document.getElementById('reasonFinish'),
+  cleanMode: document.getElementById('cleanMode'),
   clientLink: document.getElementById('clientLink'),
   clientLinkDomain: document.getElementById('clientLinkDomain'),
   dockColor: document.getElementById('dockColor'),
@@ -101,6 +102,7 @@ async function load() {
   els.aiSuggest.checked = prefs.aiSuggest !== false;
   els.aiReason.checked = prefs.aiReason !== false;
   reasonAction = prefs.reasonAction === 'finalize' ? 'finalize' : 'copy';
+  els.cleanMode.checked = !!prefs.cleanMode;
   els.clientLink.checked = prefs.clientLink !== false;
   els.clientLinkDomain.value = prefs.clientLinkDomain || '';
   dockManual = !!prefs.dockColor;
@@ -127,6 +129,7 @@ async function save() {
     aiSuggest: els.aiSuggest.checked,
     aiReason: els.aiReason.checked,
     reasonAction,
+    cleanMode: els.cleanMode.checked,
     clientLink: els.clientLink.checked,
     clientLinkDomain: els.clientLinkDomain.value.trim(),
     dockColor: dockManual ? els.dockColor.value : '',
@@ -136,7 +139,7 @@ async function save() {
 }
 
 ['themeEnabled', 'bgImage', 'logoImage', 'logoRound', 'accent', 'overlay', 'autoColors',
- 'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink', 'clientLinkDomain'].forEach((k) => {
+ 'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink', 'clientLinkDomain', 'cleanMode'].forEach((k) => {
   els[k].addEventListener('change', save);
   els[k].addEventListener('input', save);
 });
