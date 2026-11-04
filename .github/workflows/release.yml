@@ -4,6 +4,11 @@ name: Release
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag a publicar (ex.: v0.2.0)'
+        required: true
 
 permissions:
   contents: write
@@ -13,10 +18,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - name: Define a tag
+        run: echo "TAG=${{ github.event.inputs.tag || github.ref_name }}" >> "$GITHUB_ENV"
 
       - name: Confere se a tag bate com a versão do manifest
         run: |
-          tag="${GITHUB_REF_NAME#v}"
+          tag="${TAG#v}"
           ver="$(python3 -c "import json;print(json.load(open('extension/manifest.json'))['version'])")"
           if [ "$tag" != "$ver" ]; then
             echo "Tag v$tag não bate com manifest.json ($ver)" >&2
@@ -26,12 +36,12 @@ jobs:
       - name: Empacota (manifest.json na raiz do zip, caminhos com /)
         run: |
           cd extension
-          zip -r "../personalize-sendi-${GITHUB_REF_NAME}.zip" . -x '*.DS_Store'
+          zip -r "../personalize-sendi-${TAG}.zip" . -x '*.DS_Store'
 
       - name: Publica a release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" "personalize-sendi-${GITHUB_REF_NAME}.zip" \
-            --title "Personalize Sendi ${GITHUB_REF_NAME}" \
+          gh release create "$TAG" "personalize-sendi-${TAG}.zip" \
+            --title "Personalize Sendi ${TAG}" \
             --generate-notes
