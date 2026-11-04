@@ -8,7 +8,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "personalize-sendi@personalizenato.com",
-      "strict_min_version": "109.0",
+      "strict_min_version": "128.0",
       "data_collection_permissions": {
         "required": ["personalCommunications"]
       }
@@ -27,7 +27,13 @@
   "content_scripts": [
     {
       "matches": ["https://*.sendi.chat/*"],
-      "js": ["src/selectors.js", "src/icons.js", "src/storage.js", "src/theme.js", "src/clean.js", "src/ai.js", "src/clientlink.js", "src/content.js"],
+      "js": ["src/sounds.js", "src/sound-main.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["https://*.sendi.chat/*"],
+      "js": ["src/selectors.js", "src/icons.js", "src/storage.js", "src/theme.js", "src/clean.js", "src/ai.js", "src/clientlink.js", "src/sound.js", "src/content.js"],
       "css": ["src/styles.css"],
       "run_at": "document_idle"
     }

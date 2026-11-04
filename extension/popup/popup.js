@@ -9,6 +9,11 @@ const DEFAULTS = {
   glassOpacity: 45,
   glassBlur: 16,
   cleanMode: false,
+  soundMsg: 'padrao',
+  soundOther: 'padrao',
+  soundVolume: 70,
+  soundFile: '',
+  soundFileName: '',
   autoColors: true,
   paletteHeader: '',
   paletteSide: '',
@@ -48,6 +53,17 @@ const els = {
   tokenToggle: document.getElementById('tokenToggle'),
   finalizeWarn: document.getElementById('finalizeWarn'),
   presets: document.getElementById('presets'),
+  soundMsg: document.getElementById('soundMsg'),
+  soundOther: document.getElementById('soundOther'),
+  soundVolume: document.getElementById('soundVolume'),
+  soundVolumeVal: document.getElementById('soundVolumeVal'),
+  playMsg: document.getElementById('playMsg'),
+  playOther: document.getElementById('playOther'),
+  soundFileName: document.getElementById('soundFileName'),
+  soundFileBtn: document.getElementById('soundFileBtn'),
+  soundFileClear: document.getElementById('soundFileClear'),
+  soundFileInput: document.getElementById('soundFileInput'),
+  soundStatus: document.getElementById('soundStatus'),
   themeOpts: document.getElementById('themeOpts'),
   aiUrl: document.getElementById('aiUrl'),
   aiToken: document.getElementById('aiToken'),
@@ -77,14 +93,24 @@ let dockManual = false;
 let reasonAction = 'copy';
 // 'accent' não tem controle no popup (a cor dos botões é o dockColor); preservamos o valor salvo.
 let accentPref = '#2563eb';
+// Arquivo de som do usuário (data URL) e nome; ficam em memória até o save().
+let soundFile = '';
+let soundFileName = '';
 
 function refreshUI() {
   els.themeOpts.classList.toggle('disabled', !els.themeEnabled.checked);
   els.reasonOpts.classList.toggle('disabled', !els.aiReason.checked);
   els.reasonCopy.classList.toggle('active', reasonAction === 'copy');
   els.reasonFinish.classList.toggle('active', reasonAction === 'finalize');
-  [els.overlay, els.glassOpacity, els.glassBlur].forEach((r) => {
+  [els.overlay, els.glassOpacity, els.glassBlur, els.soundVolume].forEach((r) => {
     r.style.setProperty('--p', ((r.value - r.min) / (r.max - r.min)) * 100 + '%');
+  });
+  els.soundVolumeVal.textContent = `${els.soundVolume.value}%`;
+  els.soundFileName.textContent = soundFileName || 'Nenhum arquivo';
+  els.soundFileClear.disabled = !soundFile;
+  [els.soundMsg, els.soundOther].forEach((sel) => {
+    const o = [...sel.options].find((x) => x.value === 'arquivo');
+    if (o) o.disabled = !soundFile;
   });
   els.overlayVal.textContent = `${els.overlay.value}%`;
   els.glassOpacityVal.textContent = `${els.glassOpacity.value}%`;
@@ -111,6 +137,11 @@ async function load() {
   const { cpc_prefs } = await chrome.storage.local.get('cpc_prefs');
   const prefs = Object.assign({}, DEFAULTS, cpc_prefs || {});
   accentPref = prefs.accent || '#2563eb';
+  soundFile = prefs.soundFile || '';
+  soundFileName = prefs.soundFileName || '';
+  els.soundMsg.value = prefs.soundMsg || 'padrao';
+  els.soundOther.value = prefs.soundOther || 'padrao';
+  els.soundVolume.value = typeof prefs.soundVolume === 'number' ? prefs.soundVolume : 70;
   els.themeEnabled.checked = !!prefs.themeEnabled;
   els.bgImage.value = prefs.bgImage || '';
   els.overlay.value = Math.round((prefs.overlay ?? 0.4) * 100);
@@ -158,6 +189,11 @@ async function save() {
     aiReason: els.aiReason.checked,
     reasonAction,
     cleanMode: els.cleanMode.checked,
+    soundMsg: els.soundMsg.value,
+    soundOther: els.soundOther.value,
+    soundVolume: Number(els.soundVolume.value),
+    soundFile,
+    soundFileName,
     clientLink: els.clientLink.checked,
     clientLinkDomain: els.clientLinkDomain.value.trim(),
     dockColor: dockManual ? els.dockColor.value : '',
@@ -167,7 +203,7 @@ async function save() {
 }
 
 ['themeEnabled', 'bgImage', 'overlay', 'glassMode', 'glassOpacity', 'glassBlur', 'autoColors',
- 'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink', 'clientLinkDomain', 'cleanMode'].forEach((k) => {
+ 'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink', 'clientLinkDomain', 'cleanMode', 'soundMsg', 'soundOther', 'soundVolume'].forEach((k) => {
   els[k].addEventListener('change', save);
   els[k].addEventListener('input', save);
 });
@@ -289,3 +325,60 @@ function markPreset() {
   const cur = [els.paletteHeader, els.paletteSide, els.paletteBubbleOut, els.paletteBubbleIn].map((e) => e.value.toLowerCase()).join(',');
   els.presets.querySelectorAll('.preset').forEach((b) => b.classList.toggle('active', paletteManual && b.dataset.key === cur));
 }
+
+
+// ---------- som ----------
+function fillSoundSelect(sel) {
+  window.CPC_Sounds.PRESETS.forEach((p) => {
+    const o = document.createElement('option');
+    o.value = p.id; o.textContent = p.name;
+    sel.appendChild(o);
+  });
+}
+fillSoundSelect(els.soundMsg);
+fillSoundSelect(els.soundOther);
+
+function previewSound(sel) {
+  window.CPC_Sounds.preview(sel.value, Number(els.soundVolume.value), soundFile);
+}
+els.playMsg.addEventListener('click', () => previewSound(els.soundMsg));
+els.playOther.addEventListener('click', () => previewSound(els.soundOther));
+// Ao soltar o controle de volume, toca uma amostra (feedback imediato).
+els.soundVolume.addEventListener('change', () => previewSound(els.soundMsg));
+[els.soundMsg, els.soundOther].forEach((sel) => sel.addEventListener('change', () => previewSound(sel)));
+
+let soundStatusId = null;
+function soundStatusMsg(msg, ok = true) {
+  els.soundStatus.textContent = msg;
+  els.soundStatus.className = 'status ' + (ok ? 'ok' : 'err');
+  clearTimeout(soundStatusId);
+  soundStatusId = setTimeout(() => { els.soundStatus.textContent = ''; }, 4000);
+}
+
+els.soundFileBtn.addEventListener('click', () => els.soundFileInput.click());
+els.soundFileInput.addEventListener('change', () => {
+  const f = els.soundFileInput.files[0];
+  els.soundFileInput.value = '';
+  if (!f) return;
+  if (!f.type.startsWith('audio/')) return soundStatusMsg('Escolha um arquivo de áudio.', false);
+  if (f.size > 500 * 1024) return soundStatusMsg('Arquivo grande demais (máx. 500 KB).', false);
+  const r = new FileReader();
+  r.onload = () => {
+    soundFile = String(r.result);
+    soundFileName = f.name;
+    // Se ainda ninguém usa "Meu arquivo", sugere para "Nova mensagem".
+    if (els.soundMsg.value === 'padrao') els.soundMsg.value = 'arquivo';
+    save();
+    window.CPC_Sounds.preview('arquivo', Number(els.soundVolume.value), soundFile);
+    soundStatusMsg('Arquivo carregado.');
+  };
+  r.onerror = () => soundStatusMsg('Não consegui ler o arquivo.', false);
+  r.readAsDataURL(f);
+});
+els.soundFileClear.addEventListener('click', () => {
+  soundFile = ''; soundFileName = '';
+  if (els.soundMsg.value === 'arquivo') els.soundMsg.value = 'padrao';
+  if (els.soundOther.value === 'arquivo') els.soundOther.value = 'padrao';
+  save();
+  soundStatusMsg('Arquivo removido.');
+});

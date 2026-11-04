@@ -13,6 +13,7 @@ com base em atributos estáveis (`data-slot`, `data-message-id`, `aria-label`).
 
 - **Modo clean**: esconde menus/cabeçalho e deixa só a lista de atendimentos + a conversa ocupando o resto (bom para notebook). Liga pelo popup ou pelo botão "Modo clean" no canto inferior esquerdo.
 - **Modo vidro** (liquid glass): o papel de parede cobre a tela toda e os painéis com informação (lista de conversas, cabeçalhos, barra de resposta, balões, menus) ficam translúcidos e desfocados. Opacidade e desfoque ajustáveis no popup. Exige uma imagem de fundo.
+- **Som das notificações**: o Sendi sintetiza o aviso de mensagem com Web Audio (dois tons curtos). A extensão troca esse som por um dos 6 prontos (Sino, Gota, Pop, Marimba, Digital, Suave), por um arquivo seu (MP3/WAV/OGG até 500 KB) ou o silencia, com volume próprio e botão de pré-escuta. Vale para "Nova mensagem" e "Outros avisos" separadamente. Exige Chrome 111+ / Firefox 128+ (`world: "MAIN"`).
 - **Tema**: o Sendi usa variáveis CSS (shadcn). A paleta sobrescreve `--background`, `--primary`,
   `--sidebar-background` etc., e o texto troca entre claro/escuro conforme a cor escolhida.
   Papel de parede na área de mensagens, paletas prontas ou próprias, cores dos balões.
@@ -36,6 +37,9 @@ extension/
     theme.js       # papel de parede + paleta de cores aplicada por stylesheet
     ai.js          # assistente IA: Melhorar, Sugerir, Motivo (fala com o Worker)
     icons.js       # ícones Lucide embutidos (SVG), sem emojis
+    sounds.js      # presets de som (Web Audio) — usado no popup e na página
+    sound-main.js  # roda no mundo da página: troca o som do Sendi (hook em OscillatorNode.start)
+    sound.js       # ponte: prefs -> CustomEvent para o sound-main
     clean.js       # modo clean (CSS em styles.css, atrás de html.cpc-clean)
     clientlink.js  # botão "Sistema do cliente" (lê a URL do painel do lead)
     content.js     # entrada: MutationObserver + init

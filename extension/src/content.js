@@ -22,6 +22,7 @@
     await window.CPC_Clean.apply();
     await window.CPC_AI.init();
     await window.CPC_ClientLink.init();
+    await window.CPC_Sound.apply();
     window.CPC_AI.refresh();
     window.CPC_ClientLink.refresh();
     startObserver();
@@ -29,7 +30,7 @@
 
   // Reage a mudanças de preferências feitas no popup.
   chrome.storage.onChanged.addListener((changes) => {
-    if (changes.cpc_prefs) { window.CPC_Theme.apply(); window.CPC_Clean.apply(); }
+    if (changes.cpc_prefs) { window.CPC_Theme.apply(); window.CPC_Clean.apply(); window.CPC_Sound.apply(); }
   });
 
   if (document.readyState === 'loading') {

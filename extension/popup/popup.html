@@ -17,6 +17,7 @@
   <nav class="tabs" role="tablist" aria-label="Seções">
     <button class="tab" role="tab" data-tab="geral"><i data-icon="layout-dashboard" data-size="16"></i><span>Geral</span></button>
     <button class="tab" role="tab" data-tab="aparencia"><i data-icon="palette" data-size="16"></i><span>Aparência</span></button>
+    <button class="tab" role="tab" data-tab="som"><i data-icon="volume-2" data-size="16"></i><span>Som</span></button>
     <button class="tab" role="tab" data-tab="ia"><i data-icon="bot" data-size="16"></i><span>IA</span></button>
     <button class="tab" role="tab" data-tab="backup"><i data-icon="database" data-size="16"></i><span>Backup</span></button>
   </nav>
@@ -147,6 +148,64 @@
       </div>
     </section>
 
+    <!-- ================= SOM ================= -->
+    <section class="pane" data-pane="som" hidden>
+      <div class="group">
+        <div class="group-title">Som das notificações</div>
+        <div class="row sound-row">
+          <span class="ico"><i data-icon="bell" data-size="18"></i></span>
+          <div class="row-text">
+            <label class="label" for="soundMsg">Nova mensagem</label>
+            <div class="sub">Quando um cliente escreve.</div>
+          </div>
+        </div>
+        <div class="select-row">
+          <select id="soundMsg" aria-label="Som de nova mensagem"></select>
+          <button type="button" class="icon-btn solid" id="playMsg" aria-label="Ouvir" title="Ouvir"><i data-icon="play" data-size="15"></i></button>
+        </div>
+
+        <div class="row sound-row">
+          <span class="ico"><i data-icon="volume-2" data-size="18"></i></span>
+          <div class="row-text">
+            <label class="label" for="soundOther">Outros avisos</label>
+            <div class="sub">Demais alertas sonoros do Sendi.</div>
+          </div>
+        </div>
+        <div class="select-row">
+          <select id="soundOther" aria-label="Som de outros avisos"></select>
+          <button type="button" class="icon-btn solid" id="playOther" aria-label="Ouvir" title="Ouvir"><i data-icon="play" data-size="15"></i></button>
+        </div>
+
+        <div class="slider-row">
+          <span class="label">Volume</span>
+          <input type="range" id="soundVolume" min="0" max="100" step="5" />
+          <span class="val" id="soundVolumeVal">70%</span>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="group-title">Meu arquivo de som</div>
+        <div class="row">
+          <span class="ico"><i data-icon="music" data-size="18"></i></span>
+          <div class="row-text">
+            <div class="label" id="soundFileName">Nenhum arquivo</div>
+            <div class="sub">MP3, WAV ou OGG, até 500 KB. Depois escolha “Meu arquivo” acima.</div>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:10px">
+          <button type="button" class="btn" id="soundFileBtn"><i data-icon="upload" data-size="15"></i> Escolher arquivo</button>
+          <button type="button" class="btn" id="soundFileClear"><i data-icon="trash-2" data-size="15"></i> Remover</button>
+        </div>
+        <input type="file" id="soundFileInput" accept="audio/*" hidden />
+        <div class="status" id="soundStatus" role="status"></div>
+      </div>
+
+      <div class="notice info">
+        <i data-icon="info" data-size="14"></i>
+        <span>A extensão só troca o <b>tom</b>. Se o som estiver desligado nas preferências do chat do Sendi, nada toca. O volume do computador continua valendo.</span>
+      </div>
+    </section>
+
     <!-- ================= IA ================= -->
     <section class="pane" data-pane="ia" hidden>
       <div class="group">
@@ -216,6 +275,7 @@
   </main>
 
   <script src="../src/icons.js"></script>
+  <script src="../src/sounds.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

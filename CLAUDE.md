@@ -99,7 +99,7 @@ Dois componentes independentes:
 Content scripts carregados **em ordem** pelo manifest (cada um expõe um global `window.CPC_*`;
 sem módulos ES, a ordem importa):
 
-`selectors.js` → `icons.js` → `storage.js` → `theme.js` → `clean.js` → `ai.js` → `clientlink.js` → `content.js`
+`selectors.js` → `icons.js` → `storage.js` → `theme.js` → `clean.js` → `ai.js` → `clientlink.js` → `sound.js` → `content.js` (mais `sounds.js` + `sound-main.js` no mundo MAIN)
 
 - **`selectors.js`** — todos os seletores DOM do Sendi. O Sendi é Vue + Tailwind/shadcn (classes
   utilitárias instáveis), então os seletores usam atributos estáveis: `data-slot`,
@@ -123,10 +123,11 @@ sem módulos ES, a ordem importa):
   (`justify-end` = equipe, `justify-start` = cliente). Finalizar abre o popover nativo
   (`[data-slot=popover-content]` com `command-input` e `command-item`), filtra digitando e clica
   no item — **irreversível**, pede `confirm()`.
+- **Som** — `sound-main.js` roda em `world: "MAIN"` (`document_start`) porque o Sendi toca o aviso com `OscillatorNode` do Web Audio (`useNotificationSound`: nova mensagem = seno 880→1174,7 Hz; outros = triângulo 987,8→740 Hz). Hook em `OscillatorNode.prototype.start`: classifica pelo par (tipo, frequência); se o usuário escolheu outro som, faz `disconnect()` no oscilador original (NUNCA pular o `start`: o app chama `stop()` depois e lançaria `InvalidStateError`) e toca o escolhido via `CPC_Sounds` (`sounds.js`, também usado na pré-escuta do popup). Config vai de `sound.js` (mundo isolado) por `CustomEvent('cpc-sound-config')` com a config como STRING JSON. Osciladores nossos são marcados com `ctx.__cpc` para não serem interceptados. Se o Sendi trocar as frequências, atualizar `classify()`. Gecko exige `strict_min_version` 128 por causa do `world: "MAIN"`.
 - **`clientlink.js`** — botão 🔗: nome do contato `fulano - estabelecimento` →
   `https://<estabelecimento>.<clientLinkDomain>`. Fora do padrão = sem botão.
 - **Cronômetro**: não existe; o Sendi mostra "Em atendimento há…" nos cards.
-- **`popup/`** — configuração (`popup.html` + `popup.css` + `popup.js`, JS puro) gravada em `cpc_prefs`. Quatro abas (Geral, Aparência, IA, Backup), paletas prontas (`PRESETS` em `popup.js`), campo de token com mostrar/ocultar. Toda pref nova entra em `DEFAULTS` do `popup.js` (senão o Importar a descarta) e em `getPrefs()` do `storage.js`.
+- **`popup/`** — configuração (`popup.html` + `popup.css` + `popup.js`, JS puro) gravada em `cpc_prefs`. Cinco abas (Geral, Aparência, Som, IA, Backup), paletas prontas (`PRESETS` em `popup.js`), campo de token com mostrar/ocultar. Toda pref nova entra em `DEFAULTS` do `popup.js` (senão o Importar a descarta) e em `getPrefs()` do `storage.js`.
 
 ### 2. Worker (`worker/src/worker.js`)
 Cloudflare Worker, endpoints `POST /ai` (IA), `GET /models` (diagnóstico: lista os modelos que
