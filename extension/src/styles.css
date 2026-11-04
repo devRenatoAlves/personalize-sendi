@@ -255,6 +255,16 @@ html.cpc-clean main aside {
   width: 340px !important; max-width: 340px !important; flex: 0 0 340px !important;
 }
 
+/* Barra de resposta compacta no modo clean: botões só-ícone, menos padding e aviso de 1 linha. */
+html.cpc-clean footer[data-slot="composer"] { padding: 6px 10px 8px !important; }
+html.cpc-clean footer[data-slot="composer"] textarea { min-height: 40px !important; padding-top: 8px !important; padding-bottom: 4px !important; }
+html.cpc-clean footer[data-slot="composer"] form > div > div.border-t { padding-top: 4px !important; padding-bottom: 4px !important; gap: 2px !important; }
+html.cpc-clean footer[data-slot="composer"] form button > span { display: none !important; }
+html.cpc-clean footer[data-slot="composer"] form button[data-size="sm"] { width: 30px !important; height: 30px !important; min-width: 0 !important; padding: 0 !important; }
+html.cpc-clean footer[data-slot="composer"] form button[type="submit"] { width: 34px !important; height: 30px !important; min-width: 0 !important; padding: 0 !important; }
+html.cpc-clean footer[data-slot="composer"] > div:not(:first-child) { margin-top: 4px !important; padding: 3px 10px !important; min-height: 0 !important; font-size: 11px !important; gap: 6px !important; }
+html.cpc-clean footer[data-slot="composer"] > div:not(:first-child) button { height: 24px !important; padding: 0 10px !important; font-size: 11px !important; }
+
 #cpc-clean-toggle {
   position: fixed; left: 10px; bottom: 10px; z-index: 2147483000;
   padding: 5px 11px; border-radius: 999px; border: 1px solid rgba(127,127,127,.35);
