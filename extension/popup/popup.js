@@ -14,6 +14,7 @@ const DEFAULTS = {
   soundVolume: 70,
   soundFile: '',
   soundFileName: '',
+  soundOnlyBackground: false,
   autoColors: true,
   paletteHeader: '',
   paletteSide: '',
@@ -56,6 +57,7 @@ const els = {
   soundMsg: document.getElementById('soundMsg'),
   soundOther: document.getElementById('soundOther'),
   soundVolume: document.getElementById('soundVolume'),
+  soundOnlyBackground: document.getElementById('soundOnlyBackground'),
   soundVolumeVal: document.getElementById('soundVolumeVal'),
   playMsg: document.getElementById('playMsg'),
   playOther: document.getElementById('playOther'),
@@ -141,6 +143,7 @@ async function load() {
   soundFileName = prefs.soundFileName || '';
   els.soundMsg.value = prefs.soundMsg || 'padrao';
   els.soundOther.value = prefs.soundOther || 'padrao';
+  els.soundOnlyBackground.checked = !!prefs.soundOnlyBackground;
   els.soundVolume.value = typeof prefs.soundVolume === 'number' ? prefs.soundVolume : 70;
   els.themeEnabled.checked = !!prefs.themeEnabled;
   els.bgImage.value = prefs.bgImage || '';
@@ -192,6 +195,7 @@ async function save() {
     soundMsg: els.soundMsg.value,
     soundOther: els.soundOther.value,
     soundVolume: Number(els.soundVolume.value),
+    soundOnlyBackground: els.soundOnlyBackground.checked,
     soundFile,
     soundFileName,
     clientLink: els.clientLink.checked,
@@ -203,7 +207,7 @@ async function save() {
 }
 
 ['themeEnabled', 'bgImage', 'overlay', 'glassMode', 'glassOpacity', 'glassBlur', 'autoColors',
- 'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink', 'clientLinkDomain', 'cleanMode', 'soundMsg', 'soundOther', 'soundVolume'].forEach((k) => {
+ 'aiUrl', 'aiToken', 'aiImprove', 'aiSuggest', 'aiReason', 'clientLink', 'clientLinkDomain', 'cleanMode', 'soundMsg', 'soundOther', 'soundVolume', 'soundOnlyBackground'].forEach((k) => {
   els[k].addEventListener('change', save);
   els[k].addEventListener('input', save);
 });
@@ -382,3 +386,39 @@ els.soundFileClear.addEventListener('click', () => {
   save();
   soundStatusMsg('Arquivo removido.');
 });
+
+
+// ---------- aviso de nova versão (GitHub Releases) ----------
+// Consulta a última release do repositório (no máx. 1x a cada 6 h) e compara com o manifest.
+const REPO = 'devRenatoAlves/personalize-sendi';
+const newer = (a, b) => {
+  const pa = String(a).replace(/^v/, '').split('.').map(Number);
+  const pb = String(b).replace(/^v/, '').split('.').map(Number);
+  for (let i = 0; i < 3; i++) {
+    if ((pa[i] || 0) !== (pb[i] || 0)) return (pa[i] || 0) > (pb[i] || 0);
+  }
+  return false;
+};
+async function checkUpdate() {
+  try {
+    const current = chrome.runtime.getManifest?.().version;
+    if (!current) return;
+    const { cpc_update } = await chrome.storage.local.get('cpc_update');
+    let info = cpc_update;
+    if (!info || Date.now() - info.t > 6 * 3600 * 1000) {
+      const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, { headers: { Accept: 'application/vnd.github+json' } });
+      if (!res.ok) return;
+      const rel = await res.json();
+      info = { t: Date.now(), tag: rel.tag_name, url: rel.html_url };
+      await chrome.storage.local.set({ cpc_update: info });
+    }
+    if (info.tag && newer(info.tag, current)) {
+      const a = document.getElementById('updateBanner');
+      a.href = info.url;
+      document.getElementById('updateText').textContent = `Nova versão ${info.tag.replace(/^v/, '')} disponível`;
+      a.title = `Você está na ${current}`;
+      a.hidden = false;
+    }
+  } catch { /* sem rede ou limite da API: sem aviso */ }
+}
+checkUpdate();

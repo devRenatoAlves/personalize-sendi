@@ -6,7 +6,7 @@
   if (window.__cpcSoundHooked) return;
   window.__cpcSoundHooked = true;
 
-  let cfg = { msg: 'padrao', other: 'padrao', volume: 70, file: '' };
+  let cfg = { msg: 'padrao', other: 'padrao', volume: 70, file: '', onlyBackground: false };
 
   document.addEventListener('cpc-sound-config', (e) => {
     try { cfg = Object.assign(cfg, JSON.parse(e.detail)); } catch { /* ignora config inválida */ }
@@ -30,7 +30,11 @@
     try {
       if (!this.context.__cpc) {
         const k = classify(this);
-        if (k) {
+        // "Só em segundo plano": com o Sendi à frente (aba visível E janela com foco) o aviso
+        // é silenciado — vale também para o som padrão do Sendi.
+        if (k && cfg.onlyBackground && document.visibilityState === 'visible' && document.hasFocus()) {
+          this.disconnect();
+        } else if (k) {
           const choice = cfg[k.ev];
           if (choice && choice !== 'padrao') {
             if (k.first && window.CPC_Sounds) window.CPC_Sounds.play(choice, cfg.volume, cfg.file);

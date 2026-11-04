@@ -8,6 +8,7 @@ window.CPC_Sound = (function () {
       other: p.soundOther || 'padrao',
       volume: typeof p.soundVolume === 'number' ? p.soundVolume : 70,
       file: p.soundFile || '',
+      onlyBackground: !!p.soundOnlyBackground,
     });
     document.dispatchEvent(new CustomEvent('cpc-sound-config', { detail }));
   }

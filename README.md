@@ -52,6 +52,17 @@ docs/
   SDD_Sendi_Companion.md
 ```
 
+## Instalar (para a equipe)
+
+A distribuição é pela aba **Releases** do GitHub, sem Chrome Web Store:
+
+1. Abra https://github.com/devRenatoAlves/personalize-sendi/releases/latest e baixe o `personalize-sendi-vX.Y.Z.zip`.
+2. Extraia o zip numa pasta **fixa** (ex.: `Documentos/personalize-sendi`). Não apague essa pasta: o navegador lê a extensão dali.
+3. Chrome/Edge: `chrome://extensions` (ou `edge://extensions`) → ligue o **Modo do desenvolvedor** → **Carregar sem compactação** → escolha a pasta extraída (a que tem o `manifest.json`).
+4. Para **atualizar**: baixe o zip novo, extraia por cima da mesma pasta e clique em **Recarregar** no card da extensão. O popup avisa quando sai versão nova.
+
+O Chrome mostra, ao abrir, um aviso de "extensões do modo desenvolvedor"; é normal e dá para ignorar. Firefox: extensões sem assinatura só rodam como temporárias (`about:debugging`); para uso fixo é preciso assinar (ver abaixo).
+
 ## Como instalar (modo desenvolvedor)
 
 1. Chrome/Edge → `chrome://extensions`.
@@ -157,3 +168,10 @@ Os ícones são do [Lucide](https://lucide.dev) (licença ISC), embutidos como S
 `extension/src/icons.js` (sem CDN). Para adicionar um: copie o conteúdo interno do SVG do
 Lucide para o objeto `CPC_ICONS` e use `CPC_icon('nome', tamanho)`; em HTML estático,
 `<i data-icon="nome" data-size="16"></i>`.
+
+## Publicar uma versão (mantenedor)
+
+1. Suba a `version` em `extension/manifest.json` (ex.: `0.3.0`) e faça o commit.
+2. Crie e envie a tag igual à versão: `git tag v0.3.0 && git push origin v0.3.0`.
+3. O workflow `.github/workflows/release.yml` confere se a tag bate com o manifest, gera o
+   `personalize-sendi-v0.3.0.zip` e publica na aba Releases com as notas geradas dos commits.

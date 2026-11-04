@@ -14,6 +14,12 @@
     </div>
   </header>
 
+  <a class="update" id="updateBanner" href="#" target="_blank" rel="noopener" hidden>
+    <i data-icon="download" data-size="15"></i>
+    <span id="updateText">Nova versão disponível</span>
+    <span class="update-cta">Baixar</span>
+  </a>
+
   <nav class="tabs" role="tablist" aria-label="Seções">
     <button class="tab" role="tab" data-tab="geral"><i data-icon="layout-dashboard" data-size="16"></i><span>Geral</span></button>
     <button class="tab" role="tab" data-tab="aparencia"><i data-icon="palette" data-size="16"></i><span>Aparência</span></button>
@@ -184,6 +190,17 @@
       </div>
 
       <div class="group">
+        <div class="row">
+          <span class="ico"><i data-icon="eye-off" data-size="18"></i></span>
+          <div class="row-text">
+            <div class="label">Só tocar em segundo plano</div>
+            <div class="sub">Fica mudo enquanto você está olhando o Sendi. Toca se a aba estiver escondida ou a janela sem foco.</div>
+          </div>
+          <label class="switch"><input type="checkbox" id="soundOnlyBackground" /><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <div class="group">
         <div class="group-title">Meu arquivo de som</div>
         <div class="row">
           <span class="ico"><i data-icon="music" data-size="18"></i></span>
@@ -202,7 +219,10 @@
 
       <div class="notice info">
         <i data-icon="info" data-size="14"></i>
-        <span>A extensão só troca o <b>tom</b>. Se o som estiver desligado nas preferências do chat do Sendi, nada toca. O volume do computador continua valendo.</span>
+        <span>
+          <b>Como funciona:</b> o Sendi decide <b>quando</b> avisar; a extensão só escolhe <b>qual som</b> toca nesse momento.<br />
+          Para ouvir algo, o interruptor <b>“Som de nova mensagem”</b> do Sendi precisa estar ligado: abra <b>Preferências do chat</b> (ícone de ajustes no topo da lista de conversas). Se ele estiver desligado lá, nenhum som toca, nem o escolhido aqui.
+        </span>
       </div>
     </section>
 

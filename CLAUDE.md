@@ -180,6 +180,10 @@ O modo `reason` usa JSON mode (`responseMimeType` / `response_format`).
 - Todo estado persiste em `chrome.storage.local`; o popup e os content scripts se comunicam
   por `chrome.storage.onChanged` (não por mensagens diretas).
 
+## Distribuição
+
+Por **GitHub Releases** (sem lojas): tag `vX.Y.Z` igual à `version` do manifest → `.github/workflows/release.yml` gera o zip e publica. O popup consulta `releases/latest` (cache de 6 h em `cpc_update`) e mostra um aviso quando há versão maior que a do manifest.
+
 ## Docs
 
 README em PT-BR cobre
