@@ -68,7 +68,8 @@ A distribuição é pela aba **Releases** do GitHub, sem Chrome Web Store:
 1. Abra https://github.com/devRenatoAlves/personalize-sendi/releases/latest e baixe o `personalize-sendi-vX.Y.Z.zip`.
 2. Extraia o zip numa pasta **fixa** (ex.: `Documentos/personalize-sendi`). Não apague essa pasta: o navegador lê a extensão dali.
 3. Chrome/Edge: `chrome://extensions` (ou `edge://extensions`) → ligue o **Modo do desenvolvedor** → **Carregar sem compactação** → escolha a pasta extraída (a que tem o `manifest.json`).
-4. Para **atualizar**: baixe o zip novo, extraia por cima da mesma pasta e clique em **Recarregar** no card da extensão. O popup avisa quando sai versão nova.
+4. Para **atualizar**: baixe o zip novo, extraia por cima da mesma pasta e clique em **Recarregar** no card da extensão. A tela de configuração avisa quando sai versão nova.
+5. A configuração abre num **painel lateral** ao clicar no ícone da extensão (o popup do Chrome fecha ao abrir o seletor de arquivos, o que impedia escolher o áudio). Requer Chrome 114+.
 
 O Chrome mostra, ao abrir, um aviso de "extensões do modo desenvolvedor"; é normal e dá para ignorar. Firefox: extensões sem assinatura só rodam como temporárias (`about:debugging`); para uso fixo é preciso assinar (ver abaixo).
 

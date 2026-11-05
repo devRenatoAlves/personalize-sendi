@@ -1,5 +1,13 @@
 // Service worker: extrai cores dominantes de uma imagem.
 // Roda no background (com host_permissions) → lê os bytes ignorando o CORS da página.
+// Configuração abre num painel lateral (não fecha ao abrir o seletor de arquivos, ao contrário do popup).
+if (chrome.sidePanel && chrome.sidePanel.setPanelBehavior) {
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {});
+} else if (chrome.action && chrome.action.onClicked) {
+  // Sem painel lateral (ex.: Firefox): abre a mesma tela numa aba.
+  chrome.action.onClicked.addListener(() => chrome.tabs.create({ url: chrome.runtime.getURL('popup/popup.html?panel') }));
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (!msg || msg.type !== 'cpc-extract') return;
   extractColors(msg.url).then(sendResponse);

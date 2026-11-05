@@ -271,6 +271,9 @@ async function importPrefs(file) {
 }
 
 els.exportBtn.addEventListener('click', exportPrefs);
+// Painel lateral (não fecha ao abrir o seletor de arquivos, ao contrário do popup do Chrome).
+if (window.location.search.includes('panel')) document.body.classList.add('panel');
+
 els.importBtn.addEventListener('click', () => els.importFile.click());
 els.importFile.addEventListener('change', () => {
   const f = els.importFile.files[0];

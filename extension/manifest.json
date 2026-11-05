@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Personalize Sendi",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Temas personalizados e assistente de IA (melhorar, sugerir, motivo) para o Sendi.",
-  "permissions": ["storage"],
+  "permissions": ["storage", "sidePanel"],
   "host_permissions": ["<all_urls>"],
   "browser_specific_settings": {
     "gecko": {
@@ -39,7 +39,6 @@
     }
   ],
   "action": {
-    "default_popup": "popup/popup.html",
     "default_title": "Personalize Sendi",
     "default_icon": {
       "16": "icons/icon16.png",
@@ -47,5 +46,8 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
+  },
+  "side_panel": {
+    "default_path": "popup/popup.html?panel"
   }
 }

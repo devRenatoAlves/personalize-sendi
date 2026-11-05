@@ -127,7 +127,7 @@ sem módulos ES, a ordem importa):
 - **`clientlink.js`** — botão 🔗: nome do contato `fulano - estabelecimento` →
   `https://<estabelecimento>.<clientLinkDomain>`. Fora do padrão = sem botão.
 - **Cronômetro**: não existe; o Sendi mostra "Em atendimento há…" nos cards.
-- **`popup/`** — configuração (`popup.html` + `popup.css` + `popup.js`, JS puro) gravada em `cpc_prefs`. Cinco abas (Geral, Aparência, Som, IA, Backup), paletas prontas (`PRESETS` em `popup.js`), campo de token com mostrar/ocultar. Toda pref nova entra em `DEFAULTS` do `popup.js` (senão o Importar a descarta) e em `getPrefs()` do `storage.js`.
+- **`popup/`** — configuração, aberta como PAINEL LATERAL (`side_panel` + `sidePanel.setPanelBehavior` no `background.js`; `popup.html?panel`). Não voltar para `default_popup`: o popup do Chrome no Linux fecha ao abrir o seletor de arquivos e o áudio/importação nunca era lido. (`popup.html` + `popup.css` + `popup.js`, JS puro) gravada em `cpc_prefs`. Cinco abas (Geral, Aparência, Som, IA, Backup), paletas prontas (`PRESETS` em `popup.js`), campo de token com mostrar/ocultar. Toda pref nova entra em `DEFAULTS` do `popup.js` (senão o Importar a descarta) e em `getPrefs()` do `storage.js`.
 
 ### 2. Worker (`worker/src/worker.js`)
 Cloudflare Worker, endpoints `POST /ai` (IA), `GET /models` (diagnóstico: lista os modelos que
